@@ -33,13 +33,14 @@
                     </tr>
                 </tfoot>
                 <tbody>
+                    {{#each product}}
                     <tr class="text-center align-middle">
-                        <td class="align-middle text-left">5fc5d9af8bbe2d989e82d1b4</td>
-                        <td class="align-middle text-left">iPhone 12 Pro</td>
-                        <td ><img src="https://picsum.photos/100/150"></td>
+                        <td class="align-middle text-left">{{_id}}</td>
+                        <td class="align-middle text-left">{{name}}</td>
+                        <td ><img src="{{cover}}"></td>
                         <td class="align-middle">20</td>
-                        <td class="align-middle">$999</td>
-                        <td class="align-middle">$899</td>
+                        <td class="align-middle">{{baseprice}}</td>
+                        <td class="align-middle">{{discountprice}}</td>
                         <td class="align-middle">
                             <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
                             <div class="dropdown">
@@ -48,96 +49,14 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
+                                    <a class="dropdown-item" id="dropdown-edit-product" href="/list-products/edit/{{_id}}">Chỉnh sửa</a>
+                                    <a class="dropdown-item" id="dropdown-delete-product" href="/list-products/delete/{{_id}}">Xóa</a>
                                 </div>
                             </div>
                         </td>
                     </tr>
-                    <tr class="text-center align-middle">
-                        <td class="align-middle text-left">5fc5d9af8bbe2d989e82d1b4</td>
-                        <td class="align-middle text-left">iPhone 12 Pro</td>
-                        <td ><img src="https://picsum.photos/100/150"></td>
-                        <td class="align-middle">20</td>
-                        <td class="align-middle">$999</td>
-                        <td class="align-middle">$899</td>
-                        <td class="align-middle">
-                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span><i class="fas fa-edit"></i></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="text-center align-middle">
-                        <td class="align-middle text-left">5fc5d9af8bbe2d989e82d1b4</td>
-                        <td class="align-middle text-left">iPhone 12 Pro</td>
-                        <td ><img src="https://picsum.photos/100/150"></td>
-                        <td class="align-middle">20</td>
-                        <td class="align-middle">$999</td>
-                        <td class="align-middle">$899</td>
-                        <td class="align-middle">
-                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span><i class="fas fa-edit"></i></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="text-center align-middle">
-                        <td class="align-middle text-left">5fc5d9af8bbe2d989e82d1b4</td>
-                        <td class="align-middle text-left">iPhone 12 Pro</td>
-                        <td ><img src="https://picsum.photos/100/150"></td>
-                        <td class="align-middle">20</td>
-                        <td class="align-middle">$999</td>
-                        <td class="align-middle">$899</td>
-                        <td class="align-middle">
-                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span><i class="fas fa-edit"></i></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="text-center align-middle">
-                        <td class="align-middle text-left">5fc5d9af8bbe2d989e82d1b4</td>
-                        <td class="align-middle text-left">iPhone 12 Pro</td>
-                        <td ><img src="https://picsum.photos/100/150"></td>
-                        <td class="align-middle">20</td>
-                        <td class="align-middle">$999</td>
-                        <td class="align-middle">$899</td>
-                        <td class="align-middle">
-                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span><i class="fas fa-edit"></i></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    {{/each}}
+
                 </tbody>
             </table>
         </div>

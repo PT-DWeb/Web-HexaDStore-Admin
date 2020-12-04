@@ -25,7 +25,7 @@ exports.addProductToDatabase = async(req, res, next) =>{
     //Lưu dữ liệu 
     const newproduct = new productsModel(newPostData);
     await newproduct.save();
-    res.render("products/addNewProduct");
+    res.redirect("/list-products");
 }
 
 exports.product = async(req, res, next) => {

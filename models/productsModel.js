@@ -1,28 +1,19 @@
-const mongoose = require('mongoose');
-const {db} = require('../dal/db');
-// const Product = require('../models/product.js');
+const mongoose= require('mongoose');
+const Schema = mongoose.Schema();
 
-let productSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Types.ObjectId
-    },
-    name: {
-        type: String
-    },
-    baseprice: {
-        type: String
-    },
-    discountprice: {
-        type: String
-    },
-    cover: {
-        type: String
-    }
-});
+//Tạo model
+const productSchema = mongoose.Schema({
+    id: {type: String },
+    name: {type: String, require: true},
+    baseprice: {type: String, require: true},
+    discountprice: {type: String, require: true},
+    cover: {type: String, require: true},
+    idmanufacturer: {type: String , require: true},
+    battery: {type: String, require: true},
+    camera: {type: String, require: true},
+    processor: {type: String, require: true},
+    screen:{type: String, require: true},
+    storage: {type: String, require: true},
+})
 
-const Product = mongoose.model('Product', productSchema, 'Products');
-
-exports.list = async () => {
-    const result = await Product.find({});
-    return result;
-}
+module.exports = mongoose.model('Products', productSchema, "Products" )

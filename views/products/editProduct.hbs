@@ -4,7 +4,8 @@
     </div>
     <div class="card-body">
         <div class="container">
-            <form action="" method="POST">                                    
+            <form action="/list-products/edit/{{product._id}}?_method=PUT" method="POST">      
+                <input type="hidden" name="_method" value="PUT">                              
                 <div class="row">
                     <!--Thông tin chung-->
                     <div class="form-row col-lg-6 col-12">
@@ -14,36 +15,36 @@
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
                                 <label for="productID">Mã sản phẩm:</label>
-                                <input type="text" class="form-control" placeholder="" id="productID" name="productId">
+                                <input type="text" class="form-control" value="{{product._id}}" id="productID" name="productId">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="productName">Tên sản phẩm:</label>
-                                <input type="text" class="form-control" placeholder="" id="productName" name="productName">
+                                <input type="text" class="form-control" value="{{product.name}}" id="productName" name="productName">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6">
                                 <label for="manufacturer">Nhà sản xuất:</label>
-                                <input type="text" class="form-control" placeholder="" id="manufacturer" name="manufacturer">
+                                <input type="text" class="form-control" value="{{product.idmanufacturer}}" id="manufacturer" name="manufacturer">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6">
                                 <label for="productBasePrice">Giá bán:</label>
-                                <input type="number" class="form-control" placeholder="" id="productBasePrice" name="productBasePrice">
+                                <input type="text" class="form-control" value="{{product.baseprice}}" id="productBasePrice" name="productBasePrice">
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="productDiscountPrice">Giá giảm:</label>
-                                <input type="number" class="form-control" placeholder="" id="productDiscountPrice" name="productDiscountPrice">
+                                <input type="text" class="form-control" value="{{product.discountprice}}" id="productDiscountPrice" name="productDiscountPrice">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col">
                                 <label for="productImg">Ảnh minh họa:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="productImg" name="filename" disabled>
+                                    <input type="file" class="custom-file-input" id="productImg" name="filename" value="{{product.cover}}">
                                     <label class="custom-file-label" for="customFile"></label>
                                 </div>
                             </div>
@@ -58,36 +59,36 @@
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="r">Màn hình:</label>
-                                <input type="text" class="form-control" placeholder="" id="productScreen" name="productScreen">
+                                <input type="text" class="form-control" value="{{product.screen}}" id="productScreen" name="productScreen">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="">Camera:</label>
-                                <input type="text" class="form-control" placeholder="" id="productCamera" name="productCamera">
+                                <input type="text" class="form-control" value="{{product.camera}}" id="productCamera" name="productCamera">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
                                 <label for="">CPU:</label>
-                                <input type="text" class="form-control" placeholder="" id="productProcessor" name="productProcessor">
+                                <input type="text" class="form-control" value="{{product.processor}}" id="productProcessor" name="productProcessor">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
                                 <label for="">Dung lượng lưu trữ:</label>
-                                <input type="text" class="form-control" placeholder="" id="productStorage" name="productStorage">
+                                <input type="text" class="form-control" value="{{product.storage}}" id="productStorage" name="productStorage">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="">Dung lượng pin:</label>
-                                <input type="text" class="form-control col-lg-4 col-md-6 col-12" placeholder="" id="productBattery" name="productBattery">
+                                <input type="text" class="form-control col-lg-4 col-md-6 col-12" value="{{product.battery}}" id="productBattery" name="productBattery">
                             </div>
                         </div>   
                     </div>
                 </div>      
-                <button type="submit" class="btn btn-primary">Thêm</button>
+                <button type="submit" class="btn btn-primary">Thay đổi</button>
                 <a class="btn btn-danger" href="/list-products">Hủy</a>
                 </form>   
         </div>

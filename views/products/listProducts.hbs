@@ -15,7 +15,7 @@
                         <th>Mã</th>
                         <th>Tên sản phẩm</th>
                         <th>Ảnh minh họa</th>
-                        <th>Số lượng</th>
+                        {{!-- <th>Số lượng</th> --}}
                         <th>Giá bán</th>
                         <th >Giá khuyến mãi</th>
                         <th>Thao tác</th>
@@ -26,36 +26,37 @@
                         <th>Mã</th>
                         <th>Tên sản phẩm</th>
                         <th>Ảnh minh họa</th>
-                        <th>Số lượng</th>
+                        {{!-- <th>Số lượng</th> --}}
                         <th>Giá bán</th>
                         <th>Giá khuyến mãi</th>
                         <th>Thao tác</th>
                     </tr>
                 </tfoot>
                 <tbody>
-                    {{#each productsCollection}}
-                        <tr class="text-center align-middle">
-                            <td class="align-middle text-left">{{_id}}</td>
-                            <td class="align-middle text-left">{{name}}</td>
-                            <td ><img src="{{cover}}" width="100px" height="150px"></td>
-                            <td class="align-middle">20</td>
-                            <td class="align-middle">{{baseprice}}</td>
-                            <td class="align-middle">{{discountprice}}</td>
-                            <td class="align-middle">
-                                <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                                <div class="dropdown">
-                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span><i class="fas fa-edit"></i></span>
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
-                                        <a class="dropdown-item" id="dropdown-edit-product" href="#">Chỉnh sửa</a>
-                                        <a class="dropdown-item" id="dropdown-delete-product" href="#">Xóa</a>
-                                    </div>
+                    {{#each product}}
+                    <tr class="text-center align-middle">
+                        <td class="align-middle text-left">{{_id}}</td>
+                        <td class="align-middle text-left">{{name}}</td>
+                        <td ><img src="{{cover}}" width="100px" height="150px"></td>
+                        {{!-- <td class="align-middle">20</td> --}}
+                        <td class="align-middle">{{baseprice}}</td>
+                        <td class="align-middle">{{discountprice}}</td>
+                        <td class="align-middle">
+                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
+                            <div class="dropdown">
+                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span><i class="fas fa-edit"></i></span>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách hàng</a>
+                                    <a class="dropdown-item" id="dropdown-edit-product" href="/list-products/edit/{{_id}}">Chỉnh sửa</a>
+                                    <a class="dropdown-item" id="dropdown-delete-product" href="/list-products/delete/{{_id}}">Xóa</a>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     {{/each}}
+
                 </tbody>
             </table>
         </div>

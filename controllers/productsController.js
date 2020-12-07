@@ -1,5 +1,6 @@
 //const clothesModel = require('../models/adminModel.js');
-const productsModel = require('../models/productsModel')
+const productsModel = require('../models/productsModel');
+const productService = require('../models/productsService');
 
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
@@ -8,23 +9,8 @@ exports.displayAddProduct = async(req, res, next)=>{
 }
 
 exports.addProductToDatabase = async(req, res, next) =>{
-    const newPostData = {name: req.body.productName,
-    baseprice: req.body.productBasePrice,
-    discountprice:req.body.productDiscountPrice,
-    cover: req.body.filename,
-    idmanufacturer: req.body.manufacturer,
-    battery: req.body.productBattery,
-    camera: req.body.productCamera,
-    processor: req.body.productProcessor,
-    screen: req.body.productScreen,
-    storage: req.body.productStorage
-    }
-    console.log(req.body.productName);
-    console.log(newPostData);
-    
-    //Lưu dữ liệu 
-    const newproduct = new productsModel(newPostData);
-    await newproduct.save();
+    productService.addNewProduct(req, res, next);
+
     res.redirect("/list-products");
 }
 

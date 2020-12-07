@@ -16,4 +16,4 @@ const productSchema = mongoose.Schema({
     storage: {type: String, require: true},
 })
 
-module.exports = mongoose.model('Products', productSchema, "Products" )
+module.exports = mongoose.model('Product', productSchema, "Products" )

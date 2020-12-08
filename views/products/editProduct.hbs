@@ -1,23 +1,17 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h4 class="m-0 font-weight-bold text-primary">Thêm sản phẩm</h4>                       
+        <h4 class="m-0 font-weight-bold text-primary">Chỉnh sửa thông tin sản phẩm</h4>                       
     </div>
     <div class="card-body">
         <div class="container">
-            <form action="/list-products/edit/{{product._id}}?_method=PUT" method="POST">      
+            <form action="/list-products/edit/{{product._id}}?_method=PUT" method="POST" enctype="multipart/form-data">      
                 <input type="hidden" name="_method" value="PUT">                              
                 <div class="row">
                     <!--Thông tin chung-->
-                    <div class="form-row col-lg-6 col-12">
+                    <div class="form-row col-lg-6 col-12 h-100">
                         <div><b>Thông tin chung</b></div>
                         <br>
-                        <br>
-                        <div class="form-row col-12">
-                            <div class="form-group col-lg-6 col-12">
-                                <label for="productID">Mã sản phẩm:</label>
-                                <input type="text" class="form-control" value="{{product._id}}" id="productID" name="productId">
-                            </div>
-                        </div>
+                        <br>   
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="productName">Tên sản phẩm:</label>
@@ -41,18 +35,27 @@
                             </div>
                         </div>
                         <div class="form-row col-12">
-                            <div class="form-group col">
+                            {{!-- <div class="form-group col">
                                 <label for="productImg">Ảnh minh họa:</label>
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="productImg" name="filename" value="{{product.cover}}">
                                     <label class="custom-file-label" for="customFile"></label>
                                 </div>
+                            </div> --}}
+                            <div class="form-group col-12 pb-5 mb-5">
+                               <label for="productImg">Ảnh minh họa:</label>
+                                <div class="custom-file ">
+                                    <input type="file" class="custom-file-input mb-3" id="productImg" name="filename" onchange="readURL(this)">
+                                    <img id="previewImg" src={{product.cover}} alt="Ảnh" width="100px" height="150px"/>
+                                    <label class="custom-file-label" for="customFile"></label>
+                                </div>
+                                <div></div>
                             </div>
                         </div>  
                     </div>
 
                     <!--Thông số kỹ thuật-->
-                    <div class="form-row col-lg-6 col-12">
+                    <div class="form-row col-lg-6 col-12 h-100">
                         <div><b>Thông số kỹ thuật</b></div>
                         <br>
                         <br>
@@ -87,10 +90,12 @@
                             </div>
                         </div>   
                     </div>
-                </div>      
-                <button type="submit" class="btn btn-primary">Thay đổi</button>
-                <a class="btn btn-danger" href="/list-products">Hủy</a>
-                </form>   
+                </div>
+                <div class="form-group">     
+                    <button type="submit" class="btn btn-primary mr-2">Thay đổi</button>
+                    <a class="btn btn-danger" href="/list-products">Hủy</a>
+                </div> 
+            </form>   
         </div>
     </div>
 </div>

@@ -6,11 +6,11 @@ const productService = require('../models/productsService');
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
     // console.log(product);
-    res.render('products/addNewProduct');
+    res.render('products/addNewProduct', {js_file: "../js/custom.js"});
 }
-console.log
-exports.addProductToDatabase = async(req, res, next) =>{
-    productService.addNewProduct(req, res, next);
+
+exports.addProductToDatabase = async (req, res, next) =>{
+    await productService.addNewProduct(req, res, next);
 
     res.redirect("/list-products");
 }
@@ -72,7 +72,7 @@ exports.displayEdit = async(req, res, next) => {
     res.render('products/editProduct', {product});
 };
 
-exports.edit = async(req, res, next) => {
+exports.edit = async (req, res, next) => {
     const id= req.params.id;
     const newPostData = {name: req.body.productName,
         baseprice: req.body.productBasePrice,

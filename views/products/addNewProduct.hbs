@@ -4,19 +4,19 @@
     </div>
     <div class="card-body">
         <div class="container">
-            <form action="" method="POST">                                    
+            <form action="/list-products/add-new-product" method="POST" enctype="multipart/form-data">                                    
                 <div class="row">
                     <!--Thông tin chung-->
-                    <div class="form-row col-lg-6 col-12">
+                    <div class="form-row col-lg-6 col-12 h-100">
                         <div><b>Thông tin chung</b></div>
                         <br>
                         <br>
-                        <div class="form-row col-12">
+                        {{!-- <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
                                 <label for="productID">Mã sản phẩm:</label>
                                 <input type="text" class="form-control" placeholder="" id="productID" name="productId">
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="productName">Tên sản phẩm:</label>
@@ -40,10 +40,19 @@
                             </div>
                         </div>
                         <div class="form-row col-12">
-                            <div class="form-group col">
+                            {{!-- <div class="form-group col">
                                 <label for="productImg">Ảnh minh họa:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="productImg" name="filename" disabled>
+                                    <input type="file" class="custom-file-input" id="productImg" name="filename" onchange="readURL(this);">
+                                    <img id="previewImg" src="#" alt="Ảnh" width="100px" height="150px" />
+                                    <label class="custom-file-label" for="customFile"></label>
+                                </div>
+                            </div> --}}
+                            <div class="form-group  col-12 pb-5 mb-5">
+                               <label for="productImg">Ảnh minh họa:</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input overflow-auto mb-3 " id="productImg" name="filename" onchange="readURL(this);">
+                                    <img id="previewImg" src="#" alt="Ảnh" width="100px" height="150px"/>
                                     <label class="custom-file-label" for="customFile"></label>
                                 </div>
                             </div>
@@ -51,7 +60,7 @@
                     </div>
 
                     <!--Thông số kỹ thuật-->
-                    <div class="form-row col-lg-6 col-12">
+                    <div class="form-row col-lg-6 col-12 h-100">
                         <div><b>Thông số kỹ thuật</b></div>
                         <br>
                         <br>
@@ -86,10 +95,12 @@
                             </div>
                         </div>   
                     </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary mr-2" >Thêm</button>
+                    <a class="btn btn-danger" href="/list-products">Hủy</a>
                 </div>      
-                <button type="submit" class="btn btn-primary">Thêm</button>
-                <a class="btn btn-danger" href="/list-products">Hủy</a>
-                </form>   
+            </form>   
         </div>
     </div>
 </div>

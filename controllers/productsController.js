@@ -88,7 +88,7 @@ exports.edit = async (req, res, next) => {
     //Lấy dữ liệu 
     console.log(newPostData);
     //await productsModel.findOneAndUpdate({_id: id},newPostData);
-    const product = await productsModel.find();
+    const product = await productsModel.findOneAndUpdate({_id: id});;
     
     res.render('products/listProducts', {product});
 };
@@ -97,8 +97,7 @@ exports.delete = async(req, res, next) => {
     const id= req.params.id;
 
     //Lấy dữ liệu 
-    await productsModel.findOneAndDelete({_id: id});
-    const product = await productsModel.find();
+    const product = await productsModel.findOneAndDelete({_id: id});;
     //console.log(product);
     res.render('products/listProducts', {product});
 };

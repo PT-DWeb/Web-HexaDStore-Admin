@@ -11,6 +11,8 @@ router.put('/edit/:id',productController.edit);
 
 router.get('/delete/:id',productController.delete);
 
+router.get('/branch/:nameManufacturer',productController.product);
+//router.get('/:nameProduct',productController.product);
 /* GET List products table. */
 router.get('/', productController.product);
 

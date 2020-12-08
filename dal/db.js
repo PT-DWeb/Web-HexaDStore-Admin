@@ -1,3 +1,4 @@
+// const { config } = require("dotenv/types");
 const mongoose=require("mongoose");
 require('dotenv').config()
 

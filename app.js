@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const methodOverride=require('method-override');
+const bodyParser = require('body-parser')
 const connectDB = require('./dal/db');
 
 const indexRouter = require('./routes/index');
@@ -17,6 +18,10 @@ connectDB();
 
 //Khởi tạo method-override
 app.use(methodOverride('_method'));
+
+//Khởi tạo body-parser
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

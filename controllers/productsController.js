@@ -74,10 +74,11 @@ exports.displayEdit = async(req, res, next) => {
 
 exports.edit = async (req, res, next) => {
     const id= req.params.id;
-    const newPostData = {name: req.body.productName,
+    const newPostData = {
+        name: req.body.productName,
         baseprice: req.body.productBasePrice,
         discountprice:req.body.productDiscountPrice,
-        cover: req.body.filename,
+        //cover: req.body.filename,
         idmanufacturer: req.body.manufacturer,
         battery: req.body.productBattery,
         camera: req.body.productCamera,
@@ -86,18 +87,16 @@ exports.edit = async (req, res, next) => {
         storage: req.body.productStorage
     }
     //Lấy dữ liệu 
-    console.log(newPostData);
-    //await productsModel.findOneAndUpdate({_id: id},newPostData);
-    const product = await productsModel.findOneAndUpdate({_id: id});;
+    await productsModel.findOneAndUpdate({_id: id},newPostData);
     
-    res.render('products/listProducts', {product});
+    res.redirect("/list-products");
 };
 
 exports.delete = async(req, res, next) => {
     const id= req.params.id;
 
     //Lấy dữ liệu 
-    const product = await productsModel.findOneAndDelete({_id: id});;
-    //console.log(product);
-    res.render('products/listProducts', {product});
+    await productsModel.findOneAndDelete({_id: id});
+
+    res.redirect("/list-products");
 };

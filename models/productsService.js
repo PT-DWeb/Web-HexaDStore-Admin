@@ -1,5 +1,4 @@
 const formidable = require('formidable');
-const fs = require('fs');
 const path = require('path');
 const mv = require('mv');
 const cloudinary = require('cloudinary').v2; 
@@ -19,6 +18,33 @@ exports.list = async () => {
     return result;
 }
 
+exports.uploadImg = async (coverImg, file_path, cloudinaryFolder,res, next) => {
+    const fileName = coverImg.path.split('\\').pop() + '.' + coverImg.name.split('.').pop();
+    
+    //const filePath = path.join(__dirname, '/../public/img/products/upload/' + fileName);
+    const filePath = path.join(__dirname, '/../public/img/' + file_path + fileName);
+    console.log("filePath" + filePath);
+    mv(coverImg.path, filePath, function(err) {
+        if (err) throw err;
+    });
+
+    //Upload cover image to server
+    // const publicID = 'products/' + coverImg.path.split('\\').pop();
+    const publicID = cloudinaryFolder + '/' + coverImg.path.split('\\').pop();
+    await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(coverImg.path, { public_id: publicID}, (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            //console.log(result);
+            resolve();
+        });
+    });
+
+    return cloudinary.url(publicID);
+}
+
 //Add new product
 exports.addNewProduct = async (req, res, next) => {
     const form = formidable({ multiples: true });
@@ -34,104 +60,79 @@ exports.addNewProduct = async (req, res, next) => {
             console.log(coverImg.path);
 
             if (coverImg && coverImg.size > 0){
-                const fileName = coverImg.path.split('\\').pop() + '.' + coverImg.name.split('.').pop();
-                console.log(fileName);
-                //fs.renameSync(coverImg.path, path.join(__dirname,'/../public/img/products/' + fileName));
-                
-                const filePath = path.join(__dirname, '/../public/img/products/upload/' + fileName);
-                mv(coverImg.path, filePath, function(err) {
-                    if (err) throw err;
-                });
+                this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
+                    const newPostData = {
+                        name: fields.productName,
+                        baseprice: fields.productBasePrice,
+                        discountprice:fields.productDiscountPrice,
+                        cover: link,
+                        idmanufacturer: fields.manufacturer,
+                        battery: fields.productBattery,
+                        camera: fields.productCamera,
+                        processor: fields.productProcessor,
+                        screen: fields.productScreen,
+                        storage: fields.productStorage
+                    };
+                    const newProduct = new productsModel(newPostData);
+                    return newProduct;
 
-                //Upload cover image to server
-                const publicID = 'products/' + coverImg.path.split('\\').pop();
-                await new Promise((resolve, reject) => {
-                    cloudinary.uploader.upload(coverImg.path, { public_id: publicID}, (err, result) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-                        console.log(result);
-                        resolve();
-                    });
-                });
-
-                console.log("Thêm sp");
-                const newPostData = {
-                    name: fields.productName,
-                    baseprice: fields.productBasePrice,
-                    discountprice:fields.productDiscountPrice,
-                    cover: cloudinary.url(publicID),
-                    idmanufacturer: fields.manufacturer,
-                    battery: fields.productBattery,
-                    camera: fields.productCamera,
-                    processor: fields.productProcessor,
-                    screen: fields.productScreen,
-                    storage: fields.productStorage
-                };
-
-                const newProduct = new productsModel(newPostData);
-                console.log(newProduct);
-
-                await new Promise((resolve, reject) => {
+                }).then((newProduct)=> {
                     newProduct.save();
-                    resolve();
-                });            
+
+                }).catch((err) =>{
+                    console.log("Error addNewProduct: " + err);
+                    return err;
+                });           
             }
           
             resolve();
         });
     });
+}
 
+//Edit product
+exports.editProduct = async (req, res, next) => {
+    const form = formidable({ multiples: true });
+    
+    await new Promise((resolve, reject) => {
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+   
+            const coverImg = files.filename;
+            //console.log(coverImg.path);
 
-    // form.parse(req, (err, fields, files) => {
-    //     if (err) {
-    //         next(err);
-    //         return;
-    //     }
+            if (coverImg && coverImg.size > 0){
+                this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
+                    const editData = {
+                        name: fields.productName,
+                        baseprice: fields.productBasePrice,
+                        discountprice:fields.productDiscountPrice,
+                        cover: link,
+                        idmanufacturer: fields.manufacturer,
+                        battery: fields.productBattery,
+                        camera: fields.productCamera,
+                        processor: fields.productProcessor,
+                        screen: fields.productScreen,
+                        storage: fields.productStorage
+                    };
+                    return editData;
 
-    //     const coverImg = files.filename;
-    //     console.log(coverImg.path);
+                }).then((editData)=> {
+                    const IDQuery = fields.productID;
+                    productsModel.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+                        if (err) reject(err);
+                    });
 
-    //     if (coverImg && coverImg.size > 0){
-    //         const fileName = coverImg.path.split('\\').pop() + '.' + coverImg.name.split('.').pop();
-    //         console.log(fileName);
-    //         //fs.renameSync(coverImg.path, path.join(__dirname,'/../public/img/products/' + fileName));
-            
-    //         const filePath = path.join(__dirname, '/../public/img/products/upload/' + fileName);
-    //         mv(coverImg.path, filePath, function(err) {
-    //             if (err) throw err;
-    //         });
-
-            
-    //         //Upload cover image to server
-    //         cloudinary.uploader.upload(coverImg.path, { public_id: 'products/' + coverImg.path.split('\\').pop()}, function(err, result){
-    //             if(err) throw err;
-    //             //console.log(result);
-    //         }).then(() => {
-    //             console.log("Thêm sp");
-    //             const newPostData = {
-    //                 name: fields.nameProduct,
-    //                 baseprice: fields.productBasePrice,
-    //                 discountprice:fields.productDiscountPrice,
-    //                 cover: cloudinary.secure_url(coverImg.path),
-    //                 idmanufacturer: fields.manufacturer,
-    //                 battery: fields.productBattery,
-    //                 camera: fields.productCamera,
-    //                 processor: fields.productProcessor,
-    //                 screen: fields.productScreen,
-    //                 storage: fields.productStorage
-    //             };
-
-    //             const newProduct = new productsModel(newPostData);
-    //             console.log(newProduct);
-    //             newProduct.save();
-    //         });
-    //     }
-    //     //Lưu dữ liệu 
-
-    // });
-
-    //const newProduct = new productsModel(newPostData);
-    //await newProduct.save();
+                }).catch((err) =>{
+                    console.log("Error editProduct: " + err);
+                    return err;
+                });         
+            }
+          
+            resolve();
+        });
+    });
 }

@@ -73,22 +73,23 @@ exports.displayEdit = async(req, res, next) => {
 };
 
 exports.edit = async (req, res, next) => {
-    const id= req.params.id;
-    const newPostData = {
-        name: req.body.productName,
-        baseprice: req.body.productBasePrice,
-        discountprice:req.body.productDiscountPrice,
-        //cover: req.body.filename,
-        idmanufacturer: req.body.manufacturer,
-        battery: req.body.productBattery,
-        camera: req.body.productCamera,
-        processor: req.body.productProcessor,
-        screen: req.body.productScreen,
-        storage: req.body.productStorage
-    }
-    //Lấy dữ liệu 
-    await productsModel.findOneAndUpdate({_id: id},newPostData);
-    
+    // const id= req.params.id;
+    // const newPostData = {
+    //     name: req.body.productName,
+    //     baseprice: req.body.productBasePrice,
+    //     discountprice:req.body.productDiscountPrice,
+    //     //cover: req.body.filename,
+    //     idmanufacturer: req.body.manufacturer,
+    //     battery: req.body.productBattery,
+    //     camera: req.body.productCamera,
+    //     processor: req.body.productProcessor,
+    //     screen: req.body.productScreen,
+    //     storage: req.body.productStorage
+    // }
+    // //Lấy dữ liệu 
+    // await productsModel.findOneAndUpdate({_id: id},newPostData);
+
+    await productService.editProduct(req, res, next);
     res.redirect("/list-products");
 };
 

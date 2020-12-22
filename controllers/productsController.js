@@ -1,6 +1,7 @@
 //const clothesModel = require('../models/adminModel.js');
 const productsModel = require('../models/productsModel');
 const manufacturerModel = require('../models/manufacturerModel');
+const manufacturerService= require('../models/manufacturerservice');
 const productService = require('../models/productsService');
 
 exports.displayAddProduct = async(req, res, next)=>{
@@ -16,59 +17,54 @@ exports.addProductToDatabase = async (req, res, next) =>{
 }
 
 exports.product = async(req, res, next) => {
-    const limit = 6;
-
     const page= +req.query.page || 1;
+    if(page<0) page=1;
+
+    const limit = 6;
+    const offset =(page -1)*6;
     const nameManufacturer=req.params.nameManufacturer;
     const nameProduct=req.query.nameProduct;
 
-    const condition={};
+    
+    const filter={};
     if( nameProduct != undefined){
-        condition.name = nameProduct;
+        filter.name = nameProduct;
     }
     if(nameManufacturer !=undefined){
-        const manufacturer= await manufacturerModel.findOne({manufacturer: nameManufacturer});
-        condition.idmanufacturer=manufacturer._id;
+        const manufacturer= await manufacturerService.findOne({manufacturer: nameManufacturer});
+        filter.idmanufacturer=manufacturer._id;
     }
 
-    const amountProduct = await productsModel.countDocuments(condition);
+    //Lấy dữ liệu
+    const paginate = await productService.listProduct(filter,limit,offset);
 
-    if(page<0) page=1;
-
-    const offset =(page -1 )*6;
-    const totalPage = Math.ceil(amountProduct/limit);
     const pageItem=[]
-    for(let i=1;i<=totalPage;i++){
+    for(let i=1;i<=paginate.totalPages;i++){
         const items={
             value:i,
             isActive:i===page
         }
         pageItem.push(items);
     }
-    
-    const prevPage = page==1? page : page-1;
-    const nextPage = page==totalPage? page : page+1;
-    const canGoPrev = (page>1);
-    const canGoNext = (page<totalPage);
 
-    //Lấy dữ liệu 
-    const product = await productsModel.find(condition).skip(offset).limit(limit);
     res.render('products/listProducts',
-    {   product, 
-        pageItem, 
-        prevPage, 
-        nextPage,
-        canGoPrev,
-        canGoNext,
+    {   
+        product: paginate.docs, 
+        pageItem: pageItem, 
+        prevPage: paginate.prevPage, 
+        nextPage: paginate.nextPage,
+        canGoPrev: paginate.hasPrevPage,
+        canGoNext: paginate.hasNextPage,
     });
 };
 
 
 exports.displayEdit = async(req, res, next) => {
     const id= req.params.id;
-
+    console.log(id);
     //Lấy dữ liệu 
-    const product = await productsModel.findOne({_id: id}).lean();
+    //const product = await productsModel.findOne({_id: id}).lean();
+    const product = await productService.findOne({_id:id});
     res.render('products/editProduct', {product});
 };
 
@@ -97,7 +93,8 @@ exports.delete = async(req, res, next) => {
     const id= req.params.id;
 
     //Lấy dữ liệu 
-    await productsModel.findOneAndDelete({_id: id});
+    const filter={_id:id};
+    await productService.deleteProduct(filter);
 
     res.redirect("/list-products");
 };

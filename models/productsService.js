@@ -14,7 +14,18 @@ const productsModel = require('../models/productsModel');
 
 //Get list of products
 exports.list = async () => {
-    const result = await Product.find({});
+    const result = await productsModel.find({});
+    return result;
+}
+
+exports.find = async (filter) => {
+    const result = await productsModel.find(filter);
+    return result;
+}
+
+exports.findOne = async (filter) => {
+    const result = await productsModel.findOne(filter);
+    console.log(result);
     return result;
 }
 
@@ -135,4 +146,18 @@ exports.editProduct = async (req, res, next) => {
             resolve();
         });
     });
+}
+
+exports.deleteProduct=async (filter)=>{
+    await productsModel.findOneAndDelete(filter);
+}
+
+exports.listProduct = async(filter, limit, offset) =>{
+    const option={
+        offset: offset,
+        limit: limit,
+    }
+    const product = await productsModel.paginate(filter,option,);
+
+    return product;
 }

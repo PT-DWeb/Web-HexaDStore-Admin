@@ -2,6 +2,7 @@ const formidable = require('formidable');
 const path = require('path');
 const mv = require('mv');
 const cloudinary = require('cloudinary').v2; 
+const fse = require('fs-extra');
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -10,7 +11,10 @@ cloudinary.config({
 })
 
 
-const productsModel = require('../models/productsModel');
+const {productsModel} = require('../models/productsModel');
+const manufacturerModel = require('../models/manufacturerModel');
+const {product2Model} = require('../models/productsModel');
+const { resolve } = require('path');
 
 //Get list of products
 exports.list = async () => {
@@ -18,15 +22,22 @@ exports.list = async () => {
     return result;
 }
 
-exports.uploadImg = async (coverImg, file_path, cloudinaryFolder,res, next) => {
-    const fileName = coverImg.path.split('\\').pop() + '.' + coverImg.name.split('.').pop();
+//Upload and get a image link
+exports.uploadImg = async (coverImg, cloudinaryFolder,res, next) => {
+    //const fileName = coverImg.path.split('\\').pop() + '.' + coverImg.name.split('.').pop();
     
     //const filePath = path.join(__dirname, '/../public/img/products/upload/' + fileName);
-    const filePath = path.join(__dirname, '/../public/img/' + file_path + fileName);
-    console.log("filePath" + filePath);
-    mv(coverImg.path, filePath, function(err) {
-        if (err) throw err;
-    });
+    //const filePath = path.join(__dirname, '/../public/img/' + file_path + fileName);
+    //console.log("filePath: " + filePath);
+    // mv(coverImg.path, filePath, function(err) {
+    //     if (err) throw err;
+    // });
+
+    //Delete temp files
+    fse.remove(coverImg.path, err => {
+        if (err) return console.error(err);
+        console.log('success!');
+    })
 
     //Upload cover image to server
     // const publicID = 'products/' + coverImg.path.split('\\').pop();
@@ -34,20 +45,33 @@ exports.uploadImg = async (coverImg, file_path, cloudinaryFolder,res, next) => {
     await new Promise((resolve, reject) => {
         cloudinary.uploader.upload(coverImg.path, { public_id: publicID}, (err, result) => {
             if (err) {
-                reject(err);
-                return;
+                return reject(err);
             }
-            //console.log(result);
+            //console.log(return cloudinary.url(publicID););
             resolve();
+            //return resolve(result);
         });
     });
 
     return cloudinary.url(publicID);
 }
 
+exports.uploadImgs = async(files, cloudinaryFolder, res, next)=>{
+    let imgLinkArr = [];
+
+    //Detail images
+    for (let i = 0; i < files.length; i++){
+        if (files[i].size > 0){
+            imgLinkArr.push(await this.uploadImg(files[i], cloudinaryFolder));
+        }
+    } 
+
+    return imgLinkArr; 
+}
+
 //Add new product
 exports.addNewProduct = async (req, res, next) => {
-    const form = formidable({ multiples: true });
+    const form = formidable({ multiples: true, maxFileSize: 20*1024*1024 });
     
     await new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
@@ -55,34 +79,62 @@ exports.addNewProduct = async (req, res, next) => {
                 reject(err);
                 return;
             }
-   
+            
             const coverImg = files.filename;
-            console.log(coverImg.path);
+            //console.log(coverImg.path);
 
             if (coverImg && coverImg.size > 0){
-                this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
-                    const newPostData = {
-                        name: fields.productName,
-                        baseprice: fields.productBasePrice,
-                        discountprice:fields.productDiscountPrice,
-                        cover: link,
-                        idmanufacturer: fields.manufacturer,
-                        battery: fields.productBattery,
-                        camera: fields.productCamera,
-                        processor: fields.productProcessor,
-                        screen: fields.productScreen,
-                        storage: fields.productStorage
-                    };
-                    const newProduct = new productsModel(newPostData);
-                    return newProduct;
+                const mainImgLink = await this.uploadImg(coverImg, 'products');     
+                const imgLinkArr = await this.uploadImgs(files.filenameArr, 'products');
 
-                }).then((newProduct)=> {
-                    newProduct.save();
+                console.log("arr: " + imgLinkArr);
+                const newPostData = {
+                    name: fields.productName,
+                    baseprice: fields.productBasePrice,
+                    discountprice:fields.productDiscountPrice,
+                    cover: mainImgLink,
+                    detailImgs: imgLinkArr,
+                    idmanufacturer: fields.manufacturer,
+                    battery: fields.productBattery,
+                    camera: fields.productCamera,
+                    processor: fields.productProcessor,
+                    screen: fields.productScreen,
+                    storage: fields.productStorage,
 
-                }).catch((err) =>{
-                    console.log("Error addNewProduct: " + err);
-                    return err;
-                });           
+                    quantityAvailable: fields.quantityAvailable,
+                    description: fields.description,
+                    //releaseDay: Date.now(),
+                    //DeletedState: 0
+                };
+                const newProduct = new product2Model(newPostData);
+                console.log("new product: \n" + newProduct);
+                await newProduct.save();
+                console.log("Save successful!");
+
+                // this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
+                //     const newPostData = {
+                //         name: fields.productName,
+                //         baseprice: fields.productBasePrice,
+                //         discountprice:fields.productDiscountPrice,
+                //         cover: link,
+                //         idmanufacturer: fields.manufacturer,
+                //         battery: fields.productBattery,
+                //         camera: fields.productCamera,
+                //         processor: fields.productProcessor,
+                //         screen: fields.productScreen,
+                //         storage: fields.productStorage
+                //     };
+                //     const newProduct = new productsModel(newPostData);
+                //     return newProduct;
+
+                // }).then((newProduct)=> {
+                //     newProduct.save();
+
+                // }).catch((err) =>{
+                //     console.log("Error addNewProduct: " + err);
+                //     return err;
+                // });
+                           
             }
           
             resolve();
@@ -92,47 +144,191 @@ exports.addNewProduct = async (req, res, next) => {
 
 //Edit product
 exports.editProduct = async (req, res, next) => {
-    const form = formidable({ multiples: true });
+    const form = formidable({ multiples: true, maxFileSize: 20*1024*1024 });
     
     await new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
             if (err) {
                 reject(err);
-                return;
+                //return;
             }
    
-            const coverImg = files.filename;
+            const mainImg = files.filename;
+            const detailImg = files.filenameArr;
+
             //console.log(coverImg.path);
 
-            if (coverImg && coverImg.size > 0){
-                this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
-                    const editData = {
-                        name: fields.productName,
-                        baseprice: fields.productBasePrice,
-                        discountprice:fields.productDiscountPrice,
-                        cover: link,
-                        idmanufacturer: fields.manufacturer,
-                        battery: fields.productBattery,
-                        camera: fields.productCamera,
-                        processor: fields.productProcessor,
-                        screen: fields.productScreen,
-                        storage: fields.productStorage
-                    };
-                    return editData;
+            // if (coverImg && coverImg.size > 0){
+            //     this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
+            //         const editData = {
+            //             name: fields.productName,
+            //             baseprice: fields.productBasePrice,
+            //             discountprice:fields.productDiscountPrice,
+            //             cover: link,
+            //             idmanufacturer: fields.manufacturer,
+            //             battery: fields.productBattery,
+            //             camera: fields.productCamera,
+            //             processor: fields.productProcessor,
+            //             screen: fields.productScreen,
+            //             storage: fields.productStorage
+            //         };
+            //         return editData;
 
-                }).then((editData)=> {
-                    const IDQuery = fields.productID;
-                    productsModel.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
-                        if (err) reject(err);
-                    });
+            //     }).then((editData)=> {
+            //         const IDQuery = fields.productID;
+            //         productsModel.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+            //             if (err) reject(err);
+            //         });
 
-                }).catch((err) =>{
-                    console.log("Error editProduct: " + err);
-                    return err;
-                });         
+            //     }).catch((err) =>{
+            //         console.log("Error editProduct: " + err);
+            //         return err;
+            //     });         
+            // }
+
+            const editData = {
+                name: fields.productName,
+                baseprice: fields.productBasePrice,
+                discountprice:fields.productDiscountPrice,
+                //cover: mainImgLink,
+                //detailImgs: detailImgLink,
+                idmanufacturer: fields.manufacturer,
+                battery: fields.productBattery,
+                camera: fields.productCamera,
+                processor: fields.productProcessor,
+                screen: fields.productScreen,
+                storage: fields.productStorage,
+
+                quantityAvailable: fields.quantityAvailable,
+                description: fields.description,
+                //releaseDay: Date.now(),
+                //DeletedState: 0
+            };
+
+            let mainImgLink;
+            let detailImgLink;
+            
+            if (mainImg && mainImg.size > 0){
+                console.log("mainImg");
+                mainImgLink = await this.uploadImg(mainImg, 'products');
+                editData.cover = mainImgLink;
             }
+
+            if (detailImg && detailImg.length > 0){
+                console.log("detailImg");
+                detailImgLink = await this.uploadImgs(detailImg, 'products');
+                editData.detailImgs = detailImgLink;
+            }
+            console.log(editData);
+            // const editData = {
+            //     name: fields.productName,
+            //     baseprice: fields.productBasePrice,
+            //     discountprice:fields.productDiscountPrice,
+            //     cover: mainImgLink,
+            //     detailImgs: detailImgLink,
+            //     idmanufacturer: fields.manufacturer,
+            //     battery: fields.productBattery,
+            //     camera: fields.productCamera,
+            //     processor: fields.productProcessor,
+            //     screen: fields.productScreen,
+            //     storage: fields.productStorage,
+
+            //     quantityAvailable: fields.quantityAvailable,
+            //     description: fields.description,
+            //     //releaseDay: Date.now(),
+            //     //DeletedState: 0
+            // };
+
+            const IDQuery = fields.productID;
+            await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+                if (err) reject(err);
+            });
+ 
+
+            // if (coverImg[0].size > 0 && coverImg.length > 0) {
+            //     await this.uploadImgs(coverImg)
+            //         .then(async (imgLinkArr)=>{
+            //             console.log("arr: " + imgLinkArr);
+
+            //             let newArr;
+            //             if (imgLinkArr.length > 1){
+            //                 newArr = imgLinkArr.slice(1);
+            //             }
+
+            //             const editData = {
+            //                 name: fields.productName,
+            //                 baseprice: fields.productBasePrice,
+            //                 discountprice:fields.productDiscountPrice,
+            //                 cover: imgLinkArr[0],
+            //                 detailImgs: newArr,
+            //                 idmanufacturer: fields.manufacturer,
+            //                 battery: fields.productBattery,
+            //                 camera: fields.productCamera,
+            //                 processor: fields.productProcessor,
+            //                 screen: fields.productScreen,
+            //                 storage: fields.productStorage,
+
+            //                 quantityAvailable: fields.quantityAvailable,
+            //                 description: fields.description,
+            //                 //releaseDay: Date.now(),
+            //                 //DeletedState: 0
+            //             };
+
+            //             const IDQuery = fields.productID;
+            //             await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+            //                 if (err) reject(err);
+            //             });
+
+            //             console.log(editData);
+            //         })
+
+            // } else {
+            //     const editData = {
+            //         name: fields.productName,
+            //         baseprice: fields.productBasePrice,
+            //         discountprice:fields.productDiscountPrice,
+            //         idmanufacturer: fields.manufacturer,
+            //         battery: fields.productBattery,
+            //         camera: fields.productCamera,
+            //         processor: fields.productProcessor,
+            //         screen: fields.productScreen,
+            //         storage: fields.productStorage,
+
+            //         quantityAvailable: fields.quantityAvailable,
+            //         description: fields.description,
+            //         //releaseDay: Date.now(),
+            //         //DeletedState: 0
+            //     };
+
+            //     const IDQuery = fields.productID;
+            //     await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+            //         if (err) reject(err);
+            //     });
+            // }
           
             resolve();
         });
     });
+}
+
+exports.getListManufacturer = async (req, res, next) => {
+    const manufacturer = await manufacturerModel.find();
+    //console.log(manufacturer);
+    return manufacturer;
+}
+
+
+exports.getListManufacturerHaveSelected = async (req, res, next) => {
+    const manufacturers = await manufacturerModel.find();
+    const newListManufacturer = [];
+
+    manufacturers.forEach((temp) => {
+        newListManufacturer.push({
+            _id:temp._id,
+            manufacturer: temp.manufacturer,
+            isSelected: temp._id === req
+        });
+    })
+
+    return newListManufacturer;
 }

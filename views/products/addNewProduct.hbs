@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         <div class="container">
-            <form action="/list-products/add-new-product" method="POST" enctype="multipart/form-data">                                    
+            <form action="/list-products/add-new-product" method="POST" enctype="multipart/form-data" id="add-new-product-form">                                    
                 <div class="row">
                     <!--Thông tin chung-->
                     <div class="form-row col-lg-6 col-12 h-100">
@@ -20,43 +20,58 @@
                         <div class="form-row col-12">
                             <div class="form-group col-12">
                                 <label for="productName">Tên sản phẩm:</label>
-                                <input type="text" class="form-control" placeholder="" id="productName" name="productName">
+                                <input type="text" class="form-control" placeholder="" id="productName" name="productName" required>
                             </div>
                         </div>
                         <div class="form-row col-12">
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-6 col-md-6">
                                 <label for="manufacturer">Nhà sản xuất:</label>
-                                <input type="text" class="form-control" placeholder="" id="manufacturer" name="manufacturer">
+                                {{!-- <input type="text" class="form-control" placeholder="" id="manufacturer" name="manufacturer"> --}}
+                                <select class="custom-select mr-sm-2" id="manufacturer" name="manufacturer" form="add-new-product-form" required>
+                                    <option selected value="" style="display: none">Chọn</option>
+                                    {{#each manufacturer}}
+                                        <option value={{_id}}>{{manufacturer}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-5 col-md-6 offset-lg-1">
+                                <label for="quantityAvailable">Số lượng hàng:</label>
+                                <input type="number" class="form-control " placeholder="" id="quantityAvailable" name="quantityAvailable" required>
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6">
                                 <label for="productBasePrice">Giá bán:</label>
-                                <input type="number" class="form-control" placeholder="" id="productBasePrice" name="productBasePrice">
+                                <input type="number" class="form-control" placeholder="" id="productBasePrice" name="productBasePrice" required>
                             </div>
                             <div class="form-group col-lg-6">
                                 <label for="productDiscountPrice">Giá giảm:</label>
                                 <input type="number" class="form-control" placeholder="" id="productDiscountPrice" name="productDiscountPrice">
                             </div>
                         </div>
-                        <div class="form-row col-12">
-                            {{!-- <div class="form-group col">
+                        <div class="form-row col-12 mb-5">
+                            <div class="form-group col-12">
                                 <label for="productImg">Ảnh minh họa:</label>
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="productImg" name="filename" onchange="readURL(this);">
-                                    <img id="previewImg" src="#" alt="Ảnh" width="100px" height="150px" />
-                                    <label class="custom-file-label" for="customFile"></label>
-                                </div>
-                            </div> --}}
-                            <div class="form-group  col-12 pb-5 mb-5">
-                               <label for="productImg">Ảnh minh họa:</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input overflow-auto mb-3 " id="productImg" name="filename" onchange="readURL(this);">
-                                    <img id="previewImg" src="#" alt="Ảnh" width="100px" height="150px"/>
-                                    <label class="custom-file-label" for="customFile"></label>
+                                    <input type="file" class="custom-file-input mb-3" id="productImg" name="filename" 
+                                        onchange="readOneURL(this);" accept="image/*" required>
+                                    <img class="" id="previewMainImg" src="#" alt="Ảnh" width="100px" height="150px" style="display: none;"/>
+                                    <label class="custom-file-label text-truncate" for="customFile"></label>
                                 </div>
                             </div>
-                        </div>  
+                            
+                        </div>
+                        <div class="form-row col-12 mb-5 mt-2">
+                            <div class="form-group col-12">
+                                <label for="productDetailImg">Ảnh chi tiết (Tối đa 3):</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input mb-3 form-control-file input-files" id="productDetailImg" 
+                                        name="filenameArr" multiple onchange="readMultipleURL(this);" accept="image/*" required>
+                                    <label class="custom-file-label text-truncate upload-files" for="customFile"></label>
+                                    <span id="previewDetailImg" />
+                                </div>
+                            </div>
+                        </div> 
                     </div>
 
                     <!--Thông số kỹ thuật-->
@@ -66,37 +81,43 @@
                         <br>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
-                                <label for="r">Màn hình:</label>
+                                <label for="productScreen">Màn hình:</label>
                                 <input type="text" class="form-control" placeholder="" id="productScreen" name="productScreen">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
-                                <label for="">Camera:</label>
+                                <label for="productCamera">Camera:</label>
                                 <input type="text" class="form-control" placeholder="" id="productCamera" name="productCamera">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
-                                <label for="">CPU:</label>
+                                <label for="productProcessor">CPU:</label>
                                 <input type="text" class="form-control" placeholder="" id="productProcessor" name="productProcessor">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-lg-6 col-12">
-                                <label for="">Dung lượng lưu trữ:</label>
+                                <label for="productStorage">Dung lượng lưu trữ:</label>
                                 <input type="text" class="form-control" placeholder="" id="productStorage" name="productStorage">
                             </div>
                         </div>
                         <div class="form-row col-12">
                             <div class="form-group col-12">
-                                <label for="">Dung lượng pin:</label>
-                                <input type="text" class="form-control col-lg-4 col-md-6 col-12" placeholder="" id="productBattery" name="productBattery">
+                                <label for="productBattery">Dung lượng pin:</label>
+                                <input type="text" class="form-control col-lg-6 col-md-6 col-12" placeholder="" id="productBattery" name="productBattery">
                             </div>
-                        </div>   
+                        </div>
+                        <div class="form-row col-12">
+                            <div class="form-group col-12">
+                                <label for="description">Mô tả sản phẩm:</label>
+                                <textarea class="form-control col-12" placeholder="" id="description" name="description" rows="4" form="add-new-product-form" required></textarea>
+                            </div>
+                        </div>     
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <button type="submit" class="btn btn-primary mr-2" >Thêm</button>
                     <a class="btn btn-danger" href="/list-products">Hủy</a>
                 </div>      

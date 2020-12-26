@@ -1,83 +1,81 @@
 //const clothesModel = require('../models/adminModel.js');
 const {productsModel} = require('../models/productsModel');
 const manufacturerModel = require('../models/manufacturerModel');
-const productService = require('../models/productsService');
+const manufacturerService= require('../models/manufacturerservice');
+const productsService = require('../models/productsService');
 const {product2Model} = require('../models/productsModel');
 
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
     // console.log(product);
-    const manufacturer = await productService.getListManufacturer();
+    const manufacturer = await productsService.getListManufacturer();
     res.render('products/addNewProduct', {manufacturer, js_file: "../js/custom.js"});
 }
 
 exports.addProductToDatabase = async (req, res, next) =>{
-    await productService.addNewProduct(req, res, next);
+    await productsService.addNewProduct(req, res, next);
 
     res.redirect("/list-products");
 }
 
 exports.product = async(req, res, next) => {
-    const limit = 6;
-
     const page= +req.query.page || 1;
+    if(page<0) page=1;
+
+    const limit = 6;
+    const offset =(page -1)*6;
     const nameManufacturer=req.params.nameManufacturer;
     const nameProduct=req.query.nameProduct;
 
-    const condition={};
-    console.log(product2Model);
+    const filter={};
     if( nameProduct != undefined){
-        condition.name = nameProduct;
+        filter.name = nameProduct;
     }
+    
     if(nameManufacturer !=undefined){
-        const manufacturer= await manufacturerModel.findOne({manufacturer: nameManufacturer});
-        condition.idmanufacturer=manufacturer._id;
-    }ll
+        const manufacturer= await manufacturerService.findOne({manufacturer: nameManufacturer});
+        filter.idmanufacturer=manufacturer._id;
+    }
 
-    const amountProduct = await product2Model.countDocuments({name:{$lte:nameProduct}}, (err, data)=>{
-        if(err) throw err;
-    });
+    //Lấy dữ liệu
+    const paginate = await productsService.listProduct(filter,limit,offset);
 
-    if(amountProduct) console.log("count: "+ amountProduct);
-
-    if(page<0) page=1;
-
-    const offset =(page -1 )*6;
-    const totalPage = Math.ceil(amountProduct/limit);
     const pageItem=[]
-    for(let i=1;i<=totalPage;i++){
+    for(let i=1;i<=paginate.totalPages;i++){
         const items={
             value:i,
             isActive:i===page
         }
         pageItem.push(items);
     }
-    
-    const prevPage = page==1? page : page-1;
-    const nextPage = page==totalPage? page : page+1;
-    const canGoPrev = (page>1);
-    const canGoNext = (page<totalPage);
 
-    //Lấy dữ liệu 
-    const product = await product2Model.find(condition).skip(offset).limit(limit);
+    const manufacturers = await productsService.getListManufacturer();
+
     res.render('products/listProducts',
-    {   product, 
-        pageItem, 
-        prevPage, 
-        nextPage,
-        canGoPrev,
-        canGoNext,
+    {   
+        product: paginate.docs, 
+        pageItem: pageItem, 
+        prevPage: paginate.prevPage, 
+        nextPage: paginate.nextPage,
+        canGoPrev: paginate.hasPrevPage,
+        canGoNext: paginate.hasNextPage,
+        manufacturers
     });
 };
 
 
 exports.displayEdit = async(req, res, next) => {
     const id= req.params.id;
-
+    console.log(id);
     //Lấy dữ liệu 
-    const product = await product2Model.findOne({_id: id}).lean();
-    const listManufacturer = await productService.getListManufacturerHaveSelected(product.idmanufacturer);
+    //const product = await product2Model.findOne({_id: id}).lean();
+    const product = await productsService.findOne({_id:id});
+    const listManufacturer = await productsService.getListManufacturerHaveSelected(product.idmanufacturer);
     res.render('products/editProduct', {product, isDisplay: product.detailImgs && product.detailImgs.length > 0, listManufacturer});
+    
+    //const product = await productsModel.findOne({_id: id}).lean();
+    // const product = await productsService.findOne({_id:id});
+    // res.render('products/editProduct', {product});
 };
 
 exports.edit = async (req, res, next) => {
@@ -97,7 +95,7 @@ exports.edit = async (req, res, next) => {
     // //Lấy dữ liệu 
     // await productsModel.findOneAndUpdate({_id: id},newPostData);
 
-    await productService.editProduct(req, res, next);
+    await productsService.editProduct(req, res, next);
     res.redirect("/list-products");
 };
 
@@ -105,7 +103,8 @@ exports.delete = async(req, res, next) => {
     const id= req.params.id;
 
     //Lấy dữ liệu 
-    await product2Model.findOneAndDelete({_id: id});
+    const filter={_id:id};
+    await productsService.deleteProduct(filter);
 
     res.redirect("/list-products");
 };

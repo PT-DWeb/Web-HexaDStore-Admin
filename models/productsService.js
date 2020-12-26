@@ -18,7 +18,18 @@ const { resolve } = require('path');
 
 //Get list of products
 exports.list = async () => {
-    const result = await Product.find({});
+    const result = await product2Model.find({});
+    return result;
+}
+
+exports.find = async (filter) => {
+    const result = await product2Model.find(filter);
+    return result;
+}
+
+exports.findOne = async (filter) => {
+    const result = await product2Model.findOne(filter);
+    console.log(result);
     return result;
 }
 
@@ -106,35 +117,11 @@ exports.addNewProduct = async (req, res, next) => {
                     //releaseDay: Date.now(),
                     //DeletedState: 0
                 };
+
                 const newProduct = new product2Model(newPostData);
                 console.log("new product: \n" + newProduct);
                 await newProduct.save();
-                console.log("Save successful!");
-
-                // this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
-                //     const newPostData = {
-                //         name: fields.productName,
-                //         baseprice: fields.productBasePrice,
-                //         discountprice:fields.productDiscountPrice,
-                //         cover: link,
-                //         idmanufacturer: fields.manufacturer,
-                //         battery: fields.productBattery,
-                //         camera: fields.productCamera,
-                //         processor: fields.productProcessor,
-                //         screen: fields.productScreen,
-                //         storage: fields.productStorage
-                //     };
-                //     const newProduct = new productsModel(newPostData);
-                //     return newProduct;
-
-                // }).then((newProduct)=> {
-                //     newProduct.save();
-
-                // }).catch((err) =>{
-                //     console.log("Error addNewProduct: " + err);
-                //     return err;
-                // });
-                           
+                console.log("Save successful!");             
             }
           
             resolve();
@@ -156,36 +143,6 @@ exports.editProduct = async (req, res, next) => {
             const mainImg = files.filename;
             const detailImg = files.filenameArr;
 
-            //console.log(coverImg.path);
-
-            // if (coverImg && coverImg.size > 0){
-            //     this.uploadImg(coverImg, 'products/upload/', 'products').then((link) => {
-            //         const editData = {
-            //             name: fields.productName,
-            //             baseprice: fields.productBasePrice,
-            //             discountprice:fields.productDiscountPrice,
-            //             cover: link,
-            //             idmanufacturer: fields.manufacturer,
-            //             battery: fields.productBattery,
-            //             camera: fields.productCamera,
-            //             processor: fields.productProcessor,
-            //             screen: fields.productScreen,
-            //             storage: fields.productStorage
-            //         };
-            //         return editData;
-
-            //     }).then((editData)=> {
-            //         const IDQuery = fields.productID;
-            //         productsModel.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
-            //             if (err) reject(err);
-            //         });
-
-            //     }).catch((err) =>{
-            //         console.log("Error editProduct: " + err);
-            //         return err;
-            //     });         
-            // }
-
             const editData = {
                 name: fields.productName,
                 baseprice: fields.productBasePrice,
@@ -205,106 +162,31 @@ exports.editProduct = async (req, res, next) => {
                 //DeletedState: 0
             };
 
-            let mainImgLink;
-            let detailImgLink;
+            //let mainImgLink;
+            //let detailImgLink;
             
             if (mainImg && mainImg.size > 0){
                 console.log("mainImg");
-                mainImgLink = await this.uploadImg(mainImg, 'products');
-                editData.cover = mainImgLink;
+                await this.uploadImg(mainImg, 'products')
+                    .then((mainImgLink)=>{
+                        editData.cover = mainImgLink;
+                    });
             }
 
             if (detailImg && detailImg.length > 0){
                 console.log("detailImg");
-                detailImgLink = await this.uploadImgs(detailImg, 'products');
-                editData.detailImgs = detailImgLink;
+                await this.uploadImgs(detailImg, 'products')
+                    .then((detailImgLink)=>{
+                        editData.detailImgs = detailImgLink;
+                    })
+                
             }
-            console.log(editData);
-            // const editData = {
-            //     name: fields.productName,
-            //     baseprice: fields.productBasePrice,
-            //     discountprice:fields.productDiscountPrice,
-            //     cover: mainImgLink,
-            //     detailImgs: detailImgLink,
-            //     idmanufacturer: fields.manufacturer,
-            //     battery: fields.productBattery,
-            //     camera: fields.productCamera,
-            //     processor: fields.productProcessor,
-            //     screen: fields.productScreen,
-            //     storage: fields.productStorage,
-
-            //     quantityAvailable: fields.quantityAvailable,
-            //     description: fields.description,
-            //     //releaseDay: Date.now(),
-            //     //DeletedState: 0
-            // };
+            //console.log(editData);
 
             const IDQuery = fields.productID;
             await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
                 if (err) reject(err);
             });
- 
-
-            // if (coverImg[0].size > 0 && coverImg.length > 0) {
-            //     await this.uploadImgs(coverImg)
-            //         .then(async (imgLinkArr)=>{
-            //             console.log("arr: " + imgLinkArr);
-
-            //             let newArr;
-            //             if (imgLinkArr.length > 1){
-            //                 newArr = imgLinkArr.slice(1);
-            //             }
-
-            //             const editData = {
-            //                 name: fields.productName,
-            //                 baseprice: fields.productBasePrice,
-            //                 discountprice:fields.productDiscountPrice,
-            //                 cover: imgLinkArr[0],
-            //                 detailImgs: newArr,
-            //                 idmanufacturer: fields.manufacturer,
-            //                 battery: fields.productBattery,
-            //                 camera: fields.productCamera,
-            //                 processor: fields.productProcessor,
-            //                 screen: fields.productScreen,
-            //                 storage: fields.productStorage,
-
-            //                 quantityAvailable: fields.quantityAvailable,
-            //                 description: fields.description,
-            //                 //releaseDay: Date.now(),
-            //                 //DeletedState: 0
-            //             };
-
-            //             const IDQuery = fields.productID;
-            //             await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
-            //                 if (err) reject(err);
-            //             });
-
-            //             console.log(editData);
-            //         })
-
-            // } else {
-            //     const editData = {
-            //         name: fields.productName,
-            //         baseprice: fields.productBasePrice,
-            //         discountprice:fields.productDiscountPrice,
-            //         idmanufacturer: fields.manufacturer,
-            //         battery: fields.productBattery,
-            //         camera: fields.productCamera,
-            //         processor: fields.productProcessor,
-            //         screen: fields.productScreen,
-            //         storage: fields.productStorage,
-
-            //         quantityAvailable: fields.quantityAvailable,
-            //         description: fields.description,
-            //         //releaseDay: Date.now(),
-            //         //DeletedState: 0
-            //     };
-
-            //     const IDQuery = fields.productID;
-            //     await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
-            //         if (err) reject(err);
-            //     });
-            // }
           
             resolve();
         });
@@ -316,7 +198,6 @@ exports.getListManufacturer = async (req, res, next) => {
     //console.log(manufacturer);
     return manufacturer;
 }
-
 
 exports.getListManufacturerHaveSelected = async (req, res, next) => {
     const manufacturers = await manufacturerModel.find();
@@ -331,4 +212,17 @@ exports.getListManufacturerHaveSelected = async (req, res, next) => {
     })
 
     return newListManufacturer;
+}
+exports.deleteProduct=async (filter)=>{
+    await product2Model.findOneAndDelete(filter);
+}
+
+exports.listProduct = async(filter, limit, offset) =>{
+    const option={
+        offset: offset,
+        limit: limit,
+    }
+    const product = await product2Model.paginate(filter,option,);
+
+    return product;
 }

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema();
 
 //Tạo model
 const manufacturerSchema = mongoose.Schema({
-    _id: {type: String },
+    //_id: {type: String },
     manufacturer: {type: String, require: true}
 })
 

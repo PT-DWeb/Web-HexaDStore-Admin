@@ -9,7 +9,10 @@ const connectDB = require('./dal/db');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const adminRouter = require('./routes/products');
+const productsRouter = require('./routes/products');
+const adAccountRouter = require('./routes/adminAccount');
+const ordersRouter = require('./routes/orders');
+const manufacturersRouter = require('./routes/manufacturers')
 
 const app = express();
 
@@ -35,7 +38,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/list-accounts', usersRouter);
-app.use('/list-products', adminRouter);
+app.use('/list-products', productsRouter);
+app.use('/my-account', adAccountRouter);
+app.use('/list-orders', ordersRouter);
+app.use('/list-manufacturers', manufacturersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

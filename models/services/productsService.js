@@ -11,9 +11,9 @@ cloudinary.config({
 })
 
 
-const {productsModel} = require('../models/productsModel');
-const manufacturerModel = require('../models/manufacturerModel');
-const {product2Model} = require('../models/productsModel');
+const {productsModel} = require('../mongoose/productsModel');
+const manufacturerModel = require('../mongoose/manufacturerModel');
+const {product2Model} = require('../mongoose/productsModel');
 const { resolve } = require('path');
 
 //Get list of products
@@ -205,9 +205,9 @@ exports.getListManufacturerHaveSelected = async (req, res, next) => {
 
     manufacturers.forEach((temp) => {
         newListManufacturer.push({
-            _id:temp._id,
+            _id:temp._id.toString(),
             manufacturer: temp.manufacturer,
-            isSelected: temp._id === req
+            isSelected: temp._id.toString() === req._id.toString()
         });
     })
 

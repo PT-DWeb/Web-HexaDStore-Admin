@@ -1,0 +1,161 @@
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h4 class="m-0 font-weight-bold text-primary">Thông tin tài khoản</h4>
+    </div>
+    <div class="card-body">
+        <div class="ads-grid py-43">
+            <div class="container py-xl-4 py-lg-2">
+                <div class="row">
+                </div>	
+                <br>
+                <div class="container bootstrap snippet">
+                    <div class="row">
+                        <div class="col-sm-3"><!--left col-->
+                            <div class="text-center">
+                                <img src="{{accountInfo.avatar}}" class="avatar rounded-circle img-thumbnail" style="width: 10rem; height: 10rem" id="previewImg" alt="avatar">
+    
+                                <div class="mt-2 h5"><strong>Nguyễn Văn A</strong></div>
+                                <button class="btn btn-success mt-3" data-toggle="modal" data-target="#changeAvt">Đổi ảnh đại diện</button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="changeAvt" tabindex="-1" role="dialog" aria-labelledby="changeAvtLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <form action="/my-account/{{accountInfo._id}}?_method=PUT" method="POST" enctype="multipart/form-data">
+                                            <input type="hidden" name="_method" value="PUT">
+                                            <input class="" name="_id" hidden value={{accountInfo._id}}></input>
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="changeAvtLabel">Chọn ảnh đại diện mới</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="custom-file text-left">
+                                                    <input type="file" id="adminAvt" name="adminAvt" onchange="readOneURL(this);" accept="image/*" required>
+                                                </div>
+                                                 <img class="" id="previewMainImg" src="#" alt="Ảnh" width="150px" height="150px" style="display: none;"/>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                                            <button class="btn btn-success" type="submit">Lưu</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>                   
+                        </div><!--/col-3-->
+                        
+
+                        <div class="col-sm-9">
+                            <ul class="nav nav-tabs mb-4">
+                                <li class="nav-item active"><a  class="nav-link active" data-toggle="tab" href="#info">Thông tin</a></li>
+                                <li class="nav-item"><a  class="nav-link" data-toggle="tab" href="#modifyInfo">Chỉnh sửa</a></li>
+                                <li class="nav-item"><a  class="nav-link" data-toggle="tab" href="#changePassword">Đổi mật khẩu</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="info">
+                                    <table class="table table-striped table-borderless">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Họ tên</th>
+                                                <td>{{accountInfo.name}}</td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <th scope="row">Ngày sinh</th>
+                                                {{!-- <td id="admin-dob" onload="formatDate(this);"></td> --}}
+                                                <td><input type="date" class="border-0 bg-white text-muted" value="{{accountInfo.dob}}" disabled></td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Địa chỉ</th>
+                                                <td>{{accountInfo.address}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Số điện thoại</th>
+                                                <td>{{accountInfo.phoneNumber}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Email</th>
+                                                <td>{{accountInfo.email}}</td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                                </div><!--/tab-pane-->
+
+                                <div class="tab-pane" id="modifyInfo">
+                                    <form action="/account/edit" method="POST" enctype="multipart/form-data"> 
+                                        <input value="{{accountInfo._id}}" name="id" hidden>                                   
+                                        <div class="row">
+                                            <div class="form-row col-12 h-100">
+                                                <div class="form-row col-12">
+                                                    <div class="form-group col-6">
+                                                        <label for="name">Họ tên:</label>
+                                                        <input type="text" class="form-control" placeholder="" id="name" name="name" value="{{accountInfo.name}}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row col-12">
+                                                    <div class="form-group col-lg-4">
+                                                        <label for="DoB">Ngày sinh:</label>
+                                                        <input type="date" class="form-control" placeholder="" id="DoB" name="DoB" value="{{accountInfo.dob}}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row col-12">
+                                                    <div class="form-group col-lg-12">
+                                                        <label for="address">Địa chỉ:</label>
+                                                        <input type="text" class="form-control" placeholder="" id="address" name="address" value="{{accountInfo.address}}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row col-12">
+                                                    <div class="form-group col-lg-4">
+                                                        <label for="phone">Số điện thoại:</label>
+                                                        <input type="text" class="form-control" placeholder="" id="phone" name="phone" value="{{accountInfo.phoneNumber}}" required>
+                                                    </div>
+                                                    <div class="form-group col-lg-8">
+                                                        <label for="email">Email:</label>
+                                                        <input type="email" class="form-control" placeholder="" id="email" name="email" value="{{accountInfo.email}}" required>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary mr-2" >Lưu thay đổi</button>
+                                            <a class="btn btn-danger" href="/my-account">Hủy</a>
+                                        </div>      
+                                    </form>
+                                </div><!--/tab-pane-->
+
+                                <div class="tab-pane" id="changePassword">
+                                    <form action="">
+                                        <input value="{{accountInfo._id}}" name="id" hidden>   
+                                        <div class="form-group col-lg-4">
+                                            <label for="oldPassword">Mật khẩu cũ:</label>
+                                            <input type="password" class="form-control" id="oldPassword" name="oldPassword" required>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="newPassword">Mật khẩu mới:</label>
+                                            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <label for="confirmPassword">Xác nhận mật khẩu mới:</label>
+                                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                        </div>
+                                        <div class="form-group col-lg-4">
+                                            <button type="submit" class="btn btn-primary mr-2" >Đổi mật khẩu</button>
+                                            <a class="btn btn-danger" href="/my-account">Hủy</a>
+                                        </div> 
+                                    </form>
+                                    
+                                </div><!--/tab-pane-->
+                            </div><!--/tab-content-->
+                        </div><!--/col-9-->
+                    </div><!--/row-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

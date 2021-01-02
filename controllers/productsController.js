@@ -1,9 +1,9 @@
 //const clothesModel = require('../models/adminModel.js');
-const {productsModel} = require('../models/productsModel');
-const manufacturerModel = require('../models/manufacturerModel');
-const manufacturerService= require('../models/manufacturerservice');
-const productsService = require('../models/productsService');
-const {product2Model} = require('../models/productsModel');
+const {productsModel} = require('../models/mongoose/productsModel');
+const manufacturerModel = require('../models/mongoose/manufacturerModel');
+const manufacturerService= require('../models/services/manufacturerservice');
+const productsService = require('../models/services/productsService');
+const {product2Model} = require('../models/mongoose/productsModel');
 
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
@@ -70,6 +70,7 @@ exports.displayEdit = async(req, res, next) => {
     //Lấy dữ liệu 
     //const product = await product2Model.findOne({_id: id}).lean();
     const product = await productsService.findOne({_id:id});
+    console.log("product.idmanufacturer: " + product.idmanufacturer);
     const listManufacturer = await productsService.getListManufacturerHaveSelected(product.idmanufacturer);
     res.render('products/editProduct', {product, isDisplay: product.detailImgs && product.detailImgs.length > 0, listManufacturer});
     

@@ -47,40 +47,83 @@ function readMultipleURL(input) {
     }
 }
 
-// function createImgTag(arrLinkImg) {
-//     alert ("Call " + arrLinkImg);
-//     if (arrLinkImg.length > 0) {
-//         const l = arrLinkImg.length;
-//         console.log(arrLinkImg.length);
-//         for (let i = 0; i < l; i++){
-//             $($.parseHTML("<img width='100px' height='150px' class='mr-3'>")).attr("src", arrLinkImg[i]).appendTo('#previewDetailImg').addClass("detailImg");
-//         }
-//     }
-//     else {    	
-//         $("img").remove(".detailImg");
-//     }
-// }
+function formatDate(dateStr) {
+    const [day, month, year] = dateStr.split("-");
+    document.getElementById('admin-dob').innerHTML = "aaaaa";
+    console.log(new Date(year, month - 1, day));
+    return new Date(year, month - 1, day);
+}
 
+$(function () {
+    setNavigation();
+});
 
+$( document).ready(setNavigation());
 
+function setNavigation() {
+    var path = window.location.pathname;
+    path = path.replace(/\/$/, "");
+    path = decodeURIComponent(path);
+    //console.log("path:" + path + ".");
+    //if (path == "") alert("null");
+    $(".nav-main a").each(function () {
+        var href = $(this).attr('href');
+        
+        //alert(href);
+        //alert("href:" + href + ".");
+        if (path == ""){
+            path = "/";
+            //console.log("path2:" + path + ".");
+        } else {
+            //console.log("path:" + path + ".");
+        } 
+        if (path.substring(0) === href) {
+            
+            $(this).closest('li').addClass('active');
+           // console.log("href:"+ href + ".");
+            if(href === '/list-accounts/list-active-accounts' || href === '/list-accounts/list-locked-accounts'){
+                //console.log("hello");
+                $("#collapse-user-acc").addClass("show");
+                $(".user-acc a").each(()=>{
+                    $(this).closest('a').addClass('active');
+                });
+            }
+        }
+    });
+}
 
-// $(".nav-link").on("click", function(){
-//     $(".nav-item").find(".active").removeClass("active");
-//     $(this).addClass("active");
-//  });
+function setCollapseItem(){
+    var path = window.location.pathname;
+    path = path.replace(/\/$/, "");
+    path = decodeURIComponent(path);
+    //console.log("path:" + path + ".");
+    //if (path == "") alert("null");
+    $(".nav-main a").each(function () {
+        var href = $(this).attr('href');
+        
+        //alert(href);
+        //alert("href:" + href + ".");
+        if (path == ""){
+            path = "/";
+            //console.log("path2:" + path + ".");
+        } else {
+            //console.log("path:" + path + ".");
+        } 
+        if (path.substring(0) === href) {
+            
+            $(this).closest('li').addClass('active');
+            //console.log("href:"+ href + ".");
+            if(href === '/list-accounts' || href === '/list-locked-accounts'){
+                //console.log("hello");
+                $(href).addClass('active');
+            }
+        }
+    });
+}
 
-// when any a link click
-// $('.nav-link').click(function(){
-//     // if already any element in active status remove it
-//     $('.nav-item').removeClass('active');
-//     // add active status to this one only
-//     $(this).addClass('active');
-    
-// })
-
-// $(function() {
-//     $( 'ul.navbar-nav a.nav-link' ).on( 'click', function() {
-//           $( this ).parent().find( 'li.active' ).removeClass( 'active' );
-//           $( this ).addClass( 'active' );
-//     });
-// });
+$( "tr.row-manufacturer" ).click(function (){
+    const index = $(this).index();
+    console.log("clicked " + $('td.manufacturerID')[index].innerHTML);
+    const id = $('td.manufacturerID')[index].innerHTML;
+    $('#manufacturerId').val(id);;
+});

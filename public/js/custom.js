@@ -125,5 +125,23 @@ $( "tr.row-manufacturer" ).click(function (){
     const index = $(this).index();
     console.log("clicked " + $('td.manufacturerID')[index].innerHTML);
     const id = $('td.manufacturerID')[index].innerHTML;
-    $('#manufacturerId').val(id);;
+    $('#manufacturerId').val(id);
 });
+
+//Password
+window.onload = function () {
+    document.getElementById("password").onchange = validatePassword;
+    document.getElementById("confirm_password").onchange = validatePassword;
+}
+
+function validatePassword(event) {
+    var pass2 = document.getElementById("confirm_password").value;
+    var pass1 = document.getElementById("password").value;
+    if (pass1 != pass2) {
+        event.preventDefault();
+        document.getElementById("warning_password").style.display = "block";
+    }
+    else
+        document.getElementById("warning_password").style.display = "none";
+    //empty string means no validation error
+}

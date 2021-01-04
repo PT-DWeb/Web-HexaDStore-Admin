@@ -68,8 +68,11 @@
                                             
                                             <tr>
                                                 <th scope="row">Ngày sinh</th>
-                                                {{!-- <td id="admin-dob" onload="formatDate(this);"></td> --}}
-                                                <td><input type="date" class="border-0 bg-white text-muted" value="{{accountInfo.dob}}" disabled></td>
+                                                {{#if accountInfo.DoB}}
+                                                    <td><input type="date" class="border-0 bg-white text-muted" value="{{accountInfo.dob}}" disabled></td>
+                                                {{else}}
+                                                    <td></td>
+                                                {{/if}}
                                             </tr>
                                             <tr>
                                                 <th scope="row">Địa chỉ</th>
@@ -101,7 +104,7 @@
                                                 <div class="form-row col-12">
                                                     <div class="form-group col-lg-4">
                                                         <label for="DoB">Ngày sinh:</label>
-                                                        <input type="date" class="form-control" placeholder="" id="DoB" name="DoB" value="{{accountInfo.dob}}" required>
+                                                        <input type="date" class="form-control" placeholder="" id="DoB" name="DoB" value="{{accountInfo.dob}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-row col-12">

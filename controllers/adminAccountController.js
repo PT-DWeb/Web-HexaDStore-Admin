@@ -13,3 +13,17 @@ exports.changeAvatar = async (req, res, next) => {
     //res.redirect('/my-account/' + id);
     await this.displayAccInfo(req, res, next);
 }
+
+exports.displayLogin = async (req, res, next) => {
+    let message = "";
+    message = req.flash('error');
+    console.log("req.query.to");
+    console.log(req.body);
+    console.log("message: " + message);
+    if (message != "") {
+        res.render('adminAccount/login', { message, notify: 'block' });
+    }
+    else {
+        res.render('adminAccount/login', { notify: 'none' });
+    }
+}

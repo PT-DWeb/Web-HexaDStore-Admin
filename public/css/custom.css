@@ -17,14 +17,14 @@
     color: #ffffff;
 }
 
-.table-manufacturers {
+.table-manufacturers, .table-order-detail {
     counter-reset: rowNumber+1;
 }
 
-.table-manufacturers tr:not(:first-child) {
+.table-manufacturers tr:not(:first-child), .table-order-detail tr:not(:first-child) {
     counter-increment: rowNumber;
 }
 
-.table-manufacturers tr td.stt::before {
+.table-manufacturers tr td.stt::before, .table-order-detail tr td.stt::before {
     content: counter(rowNumber);
 }

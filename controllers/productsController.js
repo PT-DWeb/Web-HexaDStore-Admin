@@ -5,7 +5,7 @@ const productsService = require('../models/services/productsService');
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
     // console.log(product);
-    const manufacturer = await productsService.getListManufacturer();
+    const manufacturer = await manufacturerService.getListManufacturer();
     res.render('products/addNewProduct', {manufacturer, js_file: "../js/custom.js"});
 }
 
@@ -65,7 +65,7 @@ exports.displayEdit = async(req, res, next) => {
     const id= req.params.id;
     console.log(id);
     //Lấy dữ liệu 
-    //const product = await product2Model.findOne({_id: id}).lean();
+    //const product = await productModel.findOne({_id: id}).lean();
     const product = await productsService.findOne({_id:id});
     console.log("product.idmanufacturer: " + product.idmanufacturer);
     const listManufacturer = await manufacturerService.getListManufacturerHaveSelected(product.idmanufacturer);
@@ -105,4 +105,13 @@ exports.delete = async(req, res, next) => {
     await productsService.deleteProduct(filter);
 
     res.redirect("/list-products");
+};
+
+exports.viewProduct = async(req, res, next) => {
+    const id = req.params.id;
+
+    //Lấy dữ liệu 
+    const product = await productsService.findOne({_id: id});
+
+    res.render('products/viewProduct', {product});
 };

@@ -123,7 +123,7 @@ function setCollapseItem(){
 
 $( "tr.row-manufacturer" ).click(function (){
     const index = $(this).index();
-    alert("clicked " + index);
+    //alert("clicked " + index);
     const id = $('td.manufacturerID')[index].innerHTML;
     $('#manufacturerId').val(id);
 });
@@ -132,7 +132,7 @@ $( "tr.row-manufacturer" ).click(function (){
 window.onload = function () {
     document.getElementById("password").onchange = validatePassword;
     document.getElementById("confirm_password").onchange = validatePassword;
-    document.getElementById("loadTitle").onload = setTitleYourAccount();
+    //document.getElementById("loadTitle").onload = setTitleYourAccount();
 }
 
 function validatePassword(event) {

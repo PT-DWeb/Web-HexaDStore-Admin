@@ -46,7 +46,7 @@
                 <thead>
                     <tr class="text-center">
                         <th>Mã đơn hàng</th>
-                        <th>Ngày mua</th>
+                        <th>Ngày đặt hàng</th>
                         <th>Tên khách hàng</th>
                         <th>Tổng tiền</th>
                         <th>Trạng thái đơn hàng</th>
@@ -54,32 +54,13 @@
                 </thead>
 
                 <tbody>
-                    {{#each product}}
+                    {{#each orders}}
                     <tr class="text-center align-middle">
-                        {{!-- <td class="align-middle text-left">{{_id}}</td> --}}
-                        <td class="align-middle text-left">{{name}}</td>
-                        <td><img src="{{cover}}" width="100px" height="150px"></td>
-                        {{!-- <td class="align-middle">20</td> --}}
-                        <td class="align-middle">{{baseprice}}</td>
-                        <td class="align-middle">{{discountprice}}</td>
-                        <td class="align-middle">{{quantityAvailable}}</td>
-                        <td class="align-middle">
-                            <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span><i class="fas fa-edit"></i></span>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem dưới dạng khách
-                                        hàng</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product"
-                                        href="/list-products/edit/{{_id}}">Chỉnh sửa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product"
-                                        href="/list-products/delete/{{_id}}">Xóa</a>
-                                </div>
-                            </div>
-                        </td>
+                        <td class="align-middle text-left"><a href="/list-orders/order-detail/{{_id}}">{{_id}}</a></td>
+                        <td class="align-middle text-left">{{orderDate}}</td>
+                        <td class="align-middle text-left">{{idCustomer.name}}</td>
+                        <td class="align-middle">{{total}}</td>
+                        <td class="align-middle">{{orderStatus.statusName}}</td>
                     </tr>
                     {{/each}}
 

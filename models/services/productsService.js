@@ -1,3 +1,4 @@
+require("dotenv").config();
 const formidable = require('formidable');
 const path = require('path');
 const mv = require('mv');
@@ -10,25 +11,22 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 })
 
-
-const {productsModel} = require('../mongoose/productsModel');
-const manufacturerModel = require('../mongoose/manufacturerModel');
-const {product2Model} = require('../mongoose/productsModel');
+const productModel = require('../mongoose/productsModel');
 const { resolve } = require('path');
 
 //Get list of products
 exports.list = async () => {
-    const result = await product2Model.find({});
+    const result = await productModel.find({});
     return result;
 }
 
 exports.find = async (filter) => {
-    const result = await product2Model.find(filter);
+    const result = await productModel.find(filter);
     return result;
 }
 
 exports.findOne = async (filter) => {
-    const result = await product2Model.findOne(filter);
+    const result = await productModel.findOne(filter);
     console.log(result);
     return result;
 }
@@ -118,7 +116,7 @@ exports.addNewProduct = async (req, res, next) => {
                     //DeletedState: 0
                 };
 
-                const newProduct = new product2Model(newPostData);
+                const newProduct = new productModel(newPostData);
                 console.log("new product: \n" + newProduct);
                 await newProduct.save();
                 console.log("Save successful!");             
@@ -184,7 +182,7 @@ exports.editProduct = async (req, res, next) => {
             //console.log(editData);
 
             const IDQuery = fields.productID;
-            await product2Model.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
+            await productModel.findOneAndUpdate({_id: IDQuery}, editData, {new: true}, (err, doc) => {
                 if (err) reject(err);
             });
           
@@ -194,7 +192,7 @@ exports.editProduct = async (req, res, next) => {
 }
 
 exports.deleteProduct=async (filter)=>{
-    await product2Model.findOneAndDelete(filter);
+    await productModel.findOneAndDelete(filter);
 }
 
 exports.listProduct = async(filter, limit, offset) =>{
@@ -202,7 +200,7 @@ exports.listProduct = async(filter, limit, offset) =>{
         offset: offset,
         limit: limit,
     }
-    const product = await product2Model.paginate(filter,option,);
+    const product = await productModel.paginate(filter,option,);
 
     return product;
 }

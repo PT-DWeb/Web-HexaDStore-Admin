@@ -132,7 +132,7 @@ exports.displayFormChangePassword = async (req, res, next) => {
 
 exports.changePassword = async (req, res, next) => {
     const checkUser = await adminAccountService.findOne("name", req.body.Name);
-    if (checkUser != null) {
+    if (checkUser != null && checkUser.email != email) {
         res.render("adminAccount/changePassword", { isFailUser: true })
     }
     const pass = await new Promise((resolve, reject) => {

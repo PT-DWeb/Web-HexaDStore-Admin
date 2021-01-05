@@ -123,7 +123,7 @@ function setCollapseItem(){
 
 $( "tr.row-manufacturer" ).click(function (){
     const index = $(this).index();
-    console.log("clicked " + $('td.manufacturerID')[index].innerHTML);
+    alert("clicked " + index);
     const id = $('td.manufacturerID')[index].innerHTML;
     $('#manufacturerId').val(id);
 });
@@ -132,6 +132,7 @@ $( "tr.row-manufacturer" ).click(function (){
 window.onload = function () {
     document.getElementById("password").onchange = validatePassword;
     document.getElementById("confirm_password").onchange = validatePassword;
+    document.getElementById("loadTitle").onload = setTitleYourAccount();
 }
 
 function validatePassword(event) {
@@ -145,3 +146,97 @@ function validatePassword(event) {
         document.getElementById("warning_password").style.display = "none";
     //empty string means no validation error
 }
+
+const changeAccountState = (id, accountState) => {
+    const myAccountID =  document.getElementById("myAccountID").value;
+    const url = window.location.href + "/accountState?id=" + id + "&accountState=" + accountState + "&myAccountID=" + myAccountID;
+    //alert(`${id} ${accountState}`);
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            const data = JSON.parse(this.responseText);
+
+            const script = document.getElementById('templateAccount').innerHTML;
+        
+            const template = Handlebars.compile(script);
+            const render = template({
+                accountState: data.accountState,
+                _id: data._id,
+                email: data.email,
+                phoneNumber: data.phoneNumber,
+                name: data.name,
+            });
+          
+            document.getElementById(id).innerHTML = render;
+        }
+    }
+
+    xhttp.open("GET", url, true);
+    xhttp.send();
+}
+
+// const changeAccountState = () => {
+//     const myAccountID = document.getElementById("myAccountID").value;
+//     const id = document.getElementById("valueOfAccountID").value;
+//     const accountState = document.getElementById("valueOfAccountState").value;
+//     //alert("myAccountID:\n" + myAccountID);
+//     //alert("id\n" + id);
+//     alert("accountState:\n" + accountState);
+//     $('#changeAccountStateModal').modal('hide');
+
+//     const url = window.location.href + "/accountState?id=" + id + "&accountState=" + accountState + "&myAccountID=" + myAccountID;
+
+//     const xhttp = new XMLHttpRequest();
+//     xhttp.onreadystatechange = function(){
+//         if(this.readyState == 4 && this.status == 200){
+//             const data = JSON.parse(this.responseText);
+
+//             const script = document.getElementById('templateAccount').innerHTML;
+        
+//             const template = Handlebars.compile(script);
+//             const render = template({
+//                 accountState: data.accountState,
+//                 _id: data._id,
+//                 email: data.email,
+//                 phoneNumber: data.phoneNumber,
+//                 name: data.name,
+//             });
+          
+//             document.getElementById(id).innerHTML = render;
+//         }
+//     }
+
+//     xhttp.open("GET", url, true);
+//     xhttp.send();
+// }
+
+// $( "tr.row-account-info" ).click(function (){
+//     const index = $(this).index();
+//     //alert("index: " + index);
+//     //console.log("clicked " + $('tr.accountID')[index].innerHTML);
+//     const id = $('input.accountID')[index].value;
+//     console.log(id);
+//     const accountState = $('input.accountState')[index].value;
+//     $('#valueOfAccountID').val(id);
+//     $('#valueOfAccountState').val(accountState);
+// });
+
+
+function setTitleYourAccount(){
+    const myAccountID = document.getElementById('myAccountID').value;
+    const accountID = document.getElementsByClassName("row-account-user");
+
+    for (let i = 0; i < accountID.length; i++){
+
+        if (myAccountID === accountID[i].value){
+            document.getElementsByClassName('notify')[i].innerHTML="(Tài khoản của bạn)";
+            document.getElementsByClassName("aaa")[i].style.display = "none";
+            break;
+        }
+
+    }
+}
+
+$(document).ready(function(){
+    setTitleYourAccount();
+});

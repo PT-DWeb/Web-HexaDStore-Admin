@@ -1,10 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+
+const usersController = require('../controllers/usersController');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.render('userAccounts/listAccounts');
-});
+router.get('/', usersController.displayListAccounts);
 
+router.get('/accountState',usersController.changeAccountState);
+
+router.get('/:id', usersController.displayDetailInfo);
 
 module.exports = router;

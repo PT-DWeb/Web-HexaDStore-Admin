@@ -1,9 +1,6 @@
-//const clothesModel = require('../models/adminModel.js');
-const {productsModel} = require('../models/mongoose/productsModel');
-const manufacturerModel = require('../models/mongoose/manufacturerModel');
-const manufacturerService= require('../models/services/manufacturerservice');
+const manufacturerService = require('../models/services/manufacturerservice');
 const productsService = require('../models/services/productsService');
-const {product2Model} = require('../models/mongoose/productsModel');
+
 
 exports.displayAddProduct = async(req, res, next)=>{
     // const product = await productsModel.find();
@@ -49,7 +46,7 @@ exports.product = async(req, res, next) => {
         pageItem.push(items);
     }
 
-    const manufacturers = await productsService.getListManufacturer();
+    const manufacturers = await manufacturerService.getListManufacturer();
 
     res.render('products/listProducts',
     {   
@@ -71,7 +68,7 @@ exports.displayEdit = async(req, res, next) => {
     //const product = await product2Model.findOne({_id: id}).lean();
     const product = await productsService.findOne({_id:id});
     console.log("product.idmanufacturer: " + product.idmanufacturer);
-    const listManufacturer = await productsService.getListManufacturerHaveSelected(product.idmanufacturer);
+    const listManufacturer = await manufacturerService.getListManufacturerHaveSelected(product.idmanufacturer);
     res.render('products/editProduct', {product, isDisplay: product.detailImgs && product.detailImgs.length > 0, listManufacturer});
     
     //const product = await productsModel.findOne({_id: id}).lean();

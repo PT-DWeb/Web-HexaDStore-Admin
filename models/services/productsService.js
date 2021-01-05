@@ -193,26 +193,6 @@ exports.editProduct = async (req, res, next) => {
     });
 }
 
-exports.getListManufacturer = async (req, res, next) => {
-    const manufacturer = await manufacturerModel.find();
-    //console.log(manufacturer);
-    return manufacturer;
-}
-
-exports.getListManufacturerHaveSelected = async (req, res, next) => {
-    const manufacturers = await manufacturerModel.find();
-    const newListManufacturer = [];
-
-    manufacturers.forEach((temp) => {
-        newListManufacturer.push({
-            _id:temp._id.toString(),
-            manufacturer: temp.manufacturer,
-            isSelected: temp._id.toString() === req._id.toString()
-        });
-    })
-
-    return newListManufacturer;
-}
 exports.deleteProduct=async (filter)=>{
     await product2Model.findOneAndDelete(filter);
 }

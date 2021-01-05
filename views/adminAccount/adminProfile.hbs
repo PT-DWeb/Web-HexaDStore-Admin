@@ -15,7 +15,7 @@
                             <div class="text-center">
                                 <img src="{{accountInfo.avatar}}" class="avatar rounded-circle img-thumbnail" style="width: 10rem; height: 10rem" id="previewImg" alt="avatar">
     
-                                <div class="mt-2 h5"><strong>Nguyễn Văn A</strong></div>
+                                <div class="mt-2 h5"><strong>{{accountInfo.name}}</strong></div>
                                 <button class="btn btn-success mt-3" data-toggle="modal" data-target="#changeAvt">Đổi ảnh đại diện</button>
 
                                 <!-- Modal -->
@@ -69,10 +69,14 @@
                                             <tr>
                                                 <th scope="row">Ngày sinh</th>
                                                 {{#if accountInfo.DoB}}
-                                                    <td><input type="date" class="border-0 bg-white text-muted" value="{{accountInfo.dob}}" disabled></td>
+                                                    <td><input type="date" class="border-0 bg-white text-muted" value="{{accountInfo.DoB}}" disabled></td>
                                                 {{else}}
                                                     <td></td>
                                                 {{/if}}
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Giới tính</th>
+                                                <td>{{accountInfo.gender}}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Địa chỉ</th>
@@ -87,7 +91,7 @@
                                                 <td>{{accountInfo.email}}</td>
                                             </tr>
                                         </tbody>
-                                        </table>
+                                    </table>
                                 </div><!--/tab-pane-->
 
                                 <div class="tab-pane" id="modifyInfo">

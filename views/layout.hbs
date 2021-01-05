@@ -324,6 +324,7 @@
                                     <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{user.name}}</span>
                                     <img class="img-profile rounded-circle"
                                         src="{{user.avatar}}">
+                                    <input type="hidden" value="{{user._id}}" id="myAccountID">
                                 </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -427,6 +428,8 @@
     <!-- Custom -->
     {{!-- <script src={{js_file}}></script> --}}
     <script src="/js/custom.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
     {{!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

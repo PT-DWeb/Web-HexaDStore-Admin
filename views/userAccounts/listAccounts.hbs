@@ -1,5 +1,5 @@
 <!-- DataTales Example -->
-<div class="card shadow mb-4">
+<div class="card shadow mb-4" id="loadTitle">
     <div class="card-header py-3">
         <h4 class="m-0 font-weight-bold text-primary">Danh sách tài khoản người dùng</h4>
         <br>
@@ -51,26 +51,30 @@
             <table class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr  class="text-center">
-                        {{!-- <th>Mã</th> --}}
-                        <th>Tên đăng nhập</th>
+                        <th>Tên khách hàng</th>
                         <th>Email</th>
-                        {{!-- <th>Số lượng</th> --}}
                         <th>Số điện thoại</th>
-                        <th>Đã mua (đv: Đơn hàng)</th>
-                        {{!-- <th>Trạng thái</th> --}}
                         <th>Thao tác</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {{#each product}}
-                    <tr class="text-center align-middle">
-                        {{!-- <td class="align-middle text-left">{{_id}}</td> --}}
-                        <td class="align-middle text-left">{{name}}</td>
-                        <td><img src="{{cover}}" width="100px" height="150px"></td>
-                        {{!-- <td class="align-middle">20</td> --}}
-                        <td class="align-middle">{{baseprice}}</td>
-                        <td class="align-middle">{{discountprice}}</td>
+                    {{#each accounts}}
+                    <tr id = "{{_id}}" class="text-center align-middle" >
+                        <input type="hidden" value="{{_id}}" class="row-account-user">
+                        <td class="align-middle text-left">
+                            {{#if accountState}}
+                                <i class="fas fa-user-lock text-danger"></i>
+                            {{else}}
+                                <i class="fas fa-user text-success"></i>
+                            {{/if}}
+
+                            {{name}}
+                            <span class="notify text-primary"></span>
+
+                        </td>
+                        <td class="align-middle">{{email}}</td>
+                        <td class="align-middle">{{phoneNumber}}</td>
                         <td class="align-middle">
                             <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
                             <div class="dropdown">
@@ -79,11 +83,16 @@
                                     <span><i class="fas fa-edit"></i></span>
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" id="dropdown-view-product" href="#">Xem thông tin chi tiết</a>
-                                    <a class="dropdown-item" id="dropdown-edit-product"
-                                        href="/list-products/edit/{{_id}}">Khóa</a>
-                                    <a class="dropdown-item" id="dropdown-delete-product"
-                                        href="/list-products/delete/{{_id}}">Xóa</a>
+                                    <a class="dropdown-item" id="dropdown-view-product" href="/list-accounts/{{_id}}">Xem thông tin chi tiết</a>
+                                     
+                                   {{#if accountState}}
+                                       <a class="dropdown-item aaa" id="dropdown-edit-product"
+                                         onclick="changeAccountState('{{_id}}','{{accountState}}'); ">Mở khóa tài khoản</a>
+                                    {{else}}
+                                        <a class="dropdown-item aaa" id="dropdown-delete-product"
+                                        onclick="changeAccountState('{{_id}}','{{accountState}}');">Khóa</a>
+                                    {{/if}}
+
                                 </div>
                             </div>
                         </td>
@@ -126,3 +135,37 @@
         </div>
     </div>
 </div>
+<script type="text/x-handlebars-template" id="templateAccount">
+    {{!-- <input type="hidden" value="\{{_id}}" class="row-account-user"> --}}
+    <td class="align-middle text-left">
+        \{{#if accountState}}
+            <i class="fas fa-user-lock text-danger"></i>
+        \{{else}}
+            <i class="fas fa-user text-success"></i>
+        \{{/if}}
+        \{{name}}
+        {{!-- <span class="notify text-primary"></span> --}}
+    </td>
+    <td class="align-middle">\{{email}}</td>
+    <td class="align-middle">\{{phoneNumber}}</td>
+    <td class="align-middle">
+        <!-- <button class="btn btn-success"><i class="fas fa-edit"></i></button> -->
+        <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span><i class="fas fa-edit"></i></span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id="dropdown-view-product" href="#">Xem thông tin chi tiết</a>
+                   
+                \{{#if accountState}}
+                     <a class="dropdown-item" id="dropdown-edit-product"
+                        onclick="changeAccountState('\{{_id}}','\{{accountState}}')">Mở khóa tài khoản</a>
+                \{{else}}
+                    <a class="dropdown-item" id="dropdown-delete-product"
+                    onclick="changeAccountState('\{{_id}}','\{{accountState}}')">Khóa tài khoản</a>
+                \{{/if}}
+            </div>
+        </div>
+    </td>
+</script>

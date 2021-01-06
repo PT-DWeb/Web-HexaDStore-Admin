@@ -16,7 +16,7 @@ const accountSchema = mongoose.Schema({
     token : {type: String, require: true},
     role: {type: mongoose.Schema.Types.ObjectId , require: true},
     DoB: {type: String},
-    gender: {type: String}
+    gender: {type: String, enum: ['Nam', 'Nữ', 'Khác'], require: true}
 })
 
 accountSchema.plugin(mongoosePaginate);

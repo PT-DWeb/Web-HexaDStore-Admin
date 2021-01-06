@@ -2,16 +2,15 @@ const adminAccountService = require('../models/services/adminAccountService');
 
 exports.displayAccInfo = async (req, res, next) => {
     const accountInfo = await adminAccountService.getAccInfo(req, res, next);
-    console.log(accountInfo);
-    res.render('adminAccount/adminProfile', {accountInfo});
+    const genderSelector = await adminAccountService.getSelectedGender(req, res, next);
+    res.render('adminAccount/adminProfile', {accountInfo, genderSelector});
 }
 
 exports.changeAvatar = async (req, res, next) => {
     await adminAccountService.changeAvt(req, res, next);
-    //console.log()
-    //res.render('adminAccount/adminProfile', {accountInfo});
-    //res.redirect('/my-account/' + id);
-    await this.displayAccInfo(req, res, next);
+    const url = '/my-account/' + req.params.id;
+
+    res.redirect(url);
 }
 
 exports.displayLogin = async (req, res, next) => {
@@ -26,4 +25,11 @@ exports.displayLogin = async (req, res, next) => {
     else {
         res.render('adminAccount/login', { notify: 'none' });
     }
+}
+
+exports.editInfo = async (req, res, next) => {
+    await adminAccountService.editInfo(req, res, next);
+
+    const url = '/my-account/' + req.params.id;
+    res.redirect(url);
 }

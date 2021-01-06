@@ -89,7 +89,7 @@ exports.checkEmail = async (req, res, next) => {
     const account = await adminAccountService.findOne("email", req.body.Email);
     email = req.body.Email;
     console.log(account);
-    if (account != null) {
+    if (!account.id && account != null) {
         const OTP = await new Promise((resolve, reject) => {
             bcrypt.hash(account.name, saltRounds, function (err, hash) {
                 if (err) reject(err)
@@ -98,7 +98,7 @@ exports.checkEmail = async (req, res, next) => {
         })
         console.log("sendmail");
         console.log(account);
-        const mailer = await nodemailerService.configEmailToSend(account,OTP);
+        const mailer = await nodemailerService.configEmailToSend(account, OTP);
         const smtpTransport = (await mailer).smtpTransport;
         const mail = (await mailer).mail;
 

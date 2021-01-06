@@ -10,6 +10,8 @@ const flash = require('connect-flash');
 const session = require("express-session");
 const connectDB = require('./dal/db');
 require('dotenv').config();
+const expressHbs = require('express-handlebars');
+const hbs_sections = require('express-handlebars-sections');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -21,6 +23,22 @@ const authRouter = require('./routes/auth');
 const mailerRouter = require('./routes/mailer');
 
 const app = express();
+
+// view engine setup
+app.engine('.hbs', expressHbs({
+  defaultLayout: '../layout',
+  extname: '.hbs',
+  runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true
+  },
+  helpers: {
+    section: hbs_sections(),
+  }
+}))
+app.set('view engine', '.hbs');
+
+const hbs = expressHbs.create({});
 
 //Kết nối csdl
 connectDB();

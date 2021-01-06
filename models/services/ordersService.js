@@ -52,6 +52,6 @@ exports.getOrderDetail = async (req, res, next) => {
 
 	let orderDetail = {order, details};
 
-	console.log(orderDetail);
+	//console.log(orderDetail);
 	return orderDetail;
 }

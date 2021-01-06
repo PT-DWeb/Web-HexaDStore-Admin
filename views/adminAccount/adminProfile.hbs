@@ -63,7 +63,7 @@
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Họ tên</th>
-                                                <td>{{accountInfo.name}}</td>
+                                                <td>{{accountInfo.userName}}</td>
                                             </tr>
                                             
                                             <tr>
@@ -95,20 +95,37 @@
                                 </div><!--/tab-pane-->
 
                                 <div class="tab-pane" id="modifyInfo">
-                                    <form action="/account/edit" method="POST" enctype="multipart/form-data"> 
+                                    <form action="/my-account/edit/{{accountInfo._id}}?_method=PUT" method="POST" id="edit-profile-form">
+                                        <input type="hidden" name="_method" value="PUT"> 
                                         <input value="{{accountInfo._id}}" name="id" hidden>                                   
                                         <div class="row">
                                             <div class="form-row col-12 h-100">
                                                 <div class="form-row col-12">
                                                     <div class="form-group col-6">
                                                         <label for="name">Họ tên:</label>
-                                                        <input type="text" class="form-control" placeholder="" id="name" name="name" value="{{accountInfo.name}}" required>
+                                                        <input type="text" class="form-control" placeholder="" id="name" name="userName" value="{{accountInfo.userName}}" required>
                                                     </div>
                                                 </div>
                                                 <div class="form-row col-12">
                                                     <div class="form-group col-lg-4">
                                                         <label for="DoB">Ngày sinh:</label>
-                                                        <input type="date" class="form-control" placeholder="" id="DoB" name="DoB" value="{{accountInfo.dob}}">
+                                                        <input type="date" class="form-control" placeholder="" id="DoB" name="DoB" value="{{accountInfo.DoB}}">
+                                                    </div>
+                                                </div>
+                                                <div class="form-row col-12">
+                                                    <div class="form-group col-lg-4">
+                                                        <label for="gender">Giới tính:</label>
+                                                        <select class="custom-select" id="gender" name="gender" form="edit-profile-form" required>
+                                                            <option selected value="" style="display: none">Chọn</option>
+                                                            {{#each genderSelector}}
+                                                                {{#if isSelected}}
+                                                                    <option selected value={{name}}>{{name}}</option>
+                                                                {{else}}
+                                                                    <option value={{name}}>{{name}}</option>
+                                                                {{/if}}
+                                                                
+                                                            {{/each}}
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="form-row col-12">
@@ -120,7 +137,7 @@
                                                 <div class="form-row col-12">
                                                     <div class="form-group col-lg-4">
                                                         <label for="phone">Số điện thoại:</label>
-                                                        <input type="text" class="form-control" placeholder="" id="phone" name="phone" value="{{accountInfo.phoneNumber}}" required>
+                                                        <input type="text" class="form-control" placeholder="" id="phone" name="phoneNumber" value="{{accountInfo.phoneNumber}}" required>
                                                     </div>
                                                     <div class="form-group col-lg-8">
                                                         <label for="email">Email:</label>

@@ -47,7 +47,14 @@ passport.use(new GoogleStrategy({
             const user = await accountModel.findOne({ id: profile.id });
 
             if (user) {
-                return done(null, user);
+                if(user.id)
+                {
+                    return done(null, user);
+                }
+                else
+                {
+                    return done(null, false, { message: 'Email đã được sử dụng!!!' });
+                }
             }
             else {
                 return done(null, false, { message: 'Không tồn tại!' });

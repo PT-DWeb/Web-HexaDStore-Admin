@@ -9,11 +9,27 @@ const saltRounds = 10;
 let accountdata = "abc";
 
 exports.getAccInfo = async(req, res, next) =>{
-    console.log("\nreq.params.id: " + req.params.id + '\n');
-    //console.log("\nreq.body._id: " + req.body._id + '\n');
     const accountInfo = await accountModel.findOne({_id: req.params.id}).lean();
-    console.log(accountInfo);
     return accountInfo;
+}
+
+exports.editInfo = async(req, res, next)=>{
+    const info = req.body;
+
+    const docs = {
+        userName: info.userName,
+        DoB: info.DoB,
+        gender: info.gender,
+        address: info.address,
+        phoneNumber: info.phoneNumber,
+        email: info.email,
+    };
+
+    await accountModel.findOneAndUpdate({_id: req.body.id}, docs, {new: true}, (err, doc) => {
+        if (err) {
+            console.log("Err Edit info: " + err);
+        };
+    });
 }
 
 exports.changeAvt = async(req, res, next) =>{
@@ -115,3 +131,18 @@ exports.setTemporaryAccount = (req, res, next) => {
 }
 
 //-----Authentication-----
+
+exports.getSelectedGender = async (req, res, next) => {
+    const genderEnum = ['Nam', 'Nữ', 'Khác'];
+    const listGender = [];
+    const account = await accountModel.findOne({_id: req.params.id});
+
+    for (let i = 0; i < 3; i++){
+        listGender.push({
+            name: genderEnum[i],
+            isSelected: genderEnum[i] === account.gender
+        })
+    }
+
+    return listGender;
+}

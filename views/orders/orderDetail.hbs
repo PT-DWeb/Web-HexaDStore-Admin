@@ -2,7 +2,7 @@
     <div class="card-header py-3">
         <h4 class="m-0 font-weight-bold text-primary">Mã đơn hàng: {{order._id}}</h4>
         <br>
-        <h6>Họ tên khách hàng: {{order.idCustomer.name}}</h6>
+        <h6>Họ tên khách hàng: {{order.idCustomer.userName}}</h6>
         <h6>Số điện thoại: {{order.phone}}</h6>
         <h6>Ngày đặt hàng: {{order.orderDate}}</h6>
         <h6>Ngày giao hàng dự kiến: {{order.deliveryDate}}</h6>
@@ -26,7 +26,7 @@
                     {{#each details}}
                         <tr class="text-center align-middle">
                             <td class="align-middle text-center stt"></td>
-                            {{!-- <td class="align-middle text-left"><a href="#">{{idProduct.name}}</a></td> --}}
+                            {{!-- <td class="align-middle text-left"><a href="/list-products/view/{{idProduct._id}}">{{idProduct.name}}</a></td> --}}
                             <td class="align-middle text-left">{{idProduct.name}}</td>
                             <td class="align-middle">{{quantity}}</td>
                             <td class="align-middle">{{idProduct.discountprice}}</td>

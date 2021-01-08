@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var mailerController = require('../controllers/mailerController');
+const express = require('express');
+const router = express.Router();
+const mailerController = require('../controllers/mailerController');
+const checkLocalUserMiddleware = require('../middleware/checkLocalUser');
 
 router.get('/send', mailerController.sendmail);
 
@@ -12,9 +13,9 @@ router.get('/forgot-password', mailerController.displayFormInputEmail);
 
 router.post('/forgot-password', mailerController.checkEmail);
 
-router.get('/change-password',mailerController.displayFormChangePassword);
+router.get('/change-password', mailerController.displayFormChangePassword);
 
-router.post('/change-password',mailerController.changePassword);
+router.post('/change-password', mailerController.changePassword);
 
 // router.get('/verify', function (req, res) {
 //     console.log(req.protocol + ":/" + req.get('Host'));

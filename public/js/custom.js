@@ -129,23 +129,23 @@ $( "tr.row-manufacturer" ).click(function (){
 });
 
 //Password
-window.onload = function () {
-    document.getElementById("password").onchange = validatePassword;
-    document.getElementById("confirm_password").onchange = validatePassword;
-    //document.getElementById("loadTitle").onload = setTitleYourAccount();
-}
+// window.onload = function () {
+//     document.getElementById("password").onchange = validatePassword;
+//     document.getElementById("confirm_password").onchange = validatePassword;
+//     //document.getElementById("loadTitle").onload = setTitleYourAccount();
+// }
 
-function validatePassword(event) {
-    var pass2 = document.getElementById("confirm_password").value;
-    var pass1 = document.getElementById("password").value;
-    if (pass1 != pass2) {
-        event.preventDefault();
-        document.getElementById("warning_password").style.display = "block";
-    }
-    else
-        document.getElementById("warning_password").style.display = "none";
-    //empty string means no validation error
-}
+// function validatePassword(event) {
+//     var pass2 = document.getElementById("confirm_password").value;
+//     var pass1 = document.getElementById("password").value;
+//     if (pass1 != pass2) {
+//         event.preventDefault();
+//         document.getElementById("warning_password").style.display = "block";
+//     }
+//     else
+//         document.getElementById("warning_password").style.display = "none";
+//     //empty string means no validation error
+// }
 
 const changeAccountState = (id, accountState) => {
     const myAccountID =  document.getElementById("myAccountID").value;
@@ -230,7 +230,7 @@ function setTitleYourAccount(){
 
         if (myAccountID === accountID[i].value){
             document.getElementsByClassName('notify')[i].innerHTML="(Tài khoản của bạn)";
-            document.getElementsByClassName("aaa")[i].style.display = "none";
+            //document.getElementsByClassName("aaa")[i].style.display = "none";
             break;
         }
 

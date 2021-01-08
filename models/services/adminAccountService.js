@@ -22,10 +22,10 @@ exports.editInfo = async(req, res, next)=>{
         gender: info.gender,
         address: info.address,
         phoneNumber: info.phoneNumber,
-        email: info.email,
+        //email: info.email,
     };
 
-    await accountModel.findOneAndUpdate({_id: req.body.id}, docs, {new: true}, (err, doc) => {
+    await accountModel.findOneAndUpdate({_id: req.params.id}, docs, {new: true}, (err, doc) => {
         if (err) {
             console.log("Err Edit info: " + err);
         };
@@ -61,6 +61,28 @@ exports.changeAvt = async(req, res, next) =>{
         });
     });
 }
+
+exports.changePass = async (req, res, next)=>{
+    const account = await accountModel.findOne({_id: req.params.id});
+    const data = req.body;
+    let checkPassword = await bcrypt.compare(data.oldPassword, account.password);
+
+    if(checkPassword){
+        const hashedPassword = await new Promise((resolve, reject) => {
+            bcrypt.hash(data.newPassword, saltRounds, function (err, hash) {
+                if (err) reject(err)
+                resolve(hash)
+            });
+        })
+
+        await accountModel.findOneAndUpdate({_id: req.params.id}, {password: hashedPassword});
+        return true;
+        
+    } else {
+        return false;
+    }
+}
+
 //-----Authentication-----
 
 exports.findOne = async (key, value) => {

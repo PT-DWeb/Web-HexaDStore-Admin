@@ -81,7 +81,12 @@ exports.checkFormAuth = async (req, res, next) => {
 
 
 exports.displayFormInputEmail = async (req, res, next) => {
-    res.render("adminAccount/forgotPassword")
+    if (!req.user){
+        res.render("adminAccount/forgotPassword");
+    } else {
+        res.render("/login");
+    }
+    
 }
 
 exports.checkEmail = async (req, res, next) => {

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mailerController = require('../controllers/mailerController');
-const checkLocalUserMiddleware = require('../middleware/checkLocalUser');
+//const checkLocalUserMiddleware = require('../middleware/checkLocalUser');
 
 router.get('/send', mailerController.sendmail);
 

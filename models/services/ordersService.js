@@ -55,3 +55,54 @@ exports.getOrderDetail = async (req, res, next) => {
 	//console.log(orderDetail);
 	return orderDetail;
 }
+
+exports.caculateRevenue= async(filter,time)=>{
+	const listOrder = await ordersModel.orderModel.find();
+	let revenue=0;
+	let now = new Date();
+	
+	for(let i of listOrder){
+		if(filter == "year" && i.orderDate.getFullYear()==time){
+			revenue+=i.total;
+		}
+		else if(i.orderDate.getFullYear()==now.getFullYear()){
+			if(filter=="month" && i.orderDate.getMonth()==time)
+				revenue+=i.total;
+			else if(filter=="quarter" && Math.floor(i.orderDate.getMonth()/3)==time)
+				revenue+=i.total;
+			else if(i.orderDate.getMonth()==now.getMonth()){
+				if(filter=="day" && i.orderDate.getDate()==now.getDate()){
+					revenue+=i.total;
+				}
+			}
+			
+		}
+	}
+
+	return revenue;
+}
+
+const topProduct = async(filter,time) =>{
+	const listOrder = await ordersModel.orderModel.find();
+	const order=[];
+	let now = new Date();
+	for(let i of listOrder){
+		if(filter == "year" && i.orderDate.getFullYear()==time){
+			order.push(i);
+		}
+		else if(i.orderDate.getFullYear()==now.getFullYear()){
+			if(filter=="month" && i.orderDate.getMonth()==time)
+				order.push(i);
+			else if(filter=="quarter" && Math.floor(i.orderDate.getMonth()/3)==time)
+				order.push(i);
+			else if(i.orderDate.getMonth()==now.getMonth()){
+				if(filter=="day" && i.orderDate.getDate()==now.getDate()){
+					order.push(i);
+				}
+			}
+			
+		}
+	}
+
+	
+}

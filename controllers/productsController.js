@@ -1,4 +1,4 @@
-const manufacturerService = require('../models/services/manufacturerservice');
+const manufacturerService = require('../models/services/manufacturerService');
 const productsService = require('../models/services/productsService');
 
 

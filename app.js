@@ -64,7 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   resave: true,
   saveUninitialized: true,
-  secret: process.env.SESSION_SECRET
+  secret: 'keyboard cat'
 }));
 app.use(passport.initialize());
 app.use(passport.session());

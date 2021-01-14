@@ -6,9 +6,9 @@ const cloudinary = require('cloudinary').v2;
 const fse = require('fs-extra');
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET
+    cloud_name: 'hexadstore',
+    api_key: "616475942262733",
+    api_secret: "Cn2TDpeyyCBaLJr5ck5jB1i8d-g"
 })
 
 const productModel = require('../mongoose/productsModel');

@@ -25,11 +25,12 @@ exports.changeAvatar = async (req, res, next) => {
 
 exports.displayLogin = async (req, res, next) => {
     let message = "";
-    message = req.flash('error');
+    message = await req.flash('error');
     //console.log("req.query.to");
-    console.log(req.body);
+    //console.log(req.body);
     //console.log("message: " + message);
     if (message != "") {
+        //console.log(message);
         res.render('adminAccount/login', { message, notify: 'block' });
     }
     else {

@@ -116,7 +116,10 @@
                                 {{else}}
                                     <li class="nav-item active"><a  class="nav-link active" data-toggle="tab" href="#info">Thông tin</a></li>
                                     <li class="nav-item"><a  class="nav-link" data-toggle="tab" href="#modifyInfo">Chỉnh sửa</a></li>
-                                    <li class="nav-item"><a  class="nav-link" data-toggle="tab" href="#changePassword">Đổi mật khẩu</a></li>
+                                    {{#if accountInfo.password}}
+                                        <li class="nav-item"><a  class="nav-link" data-toggle="tab" href="#changePassword">Đổi mật khẩu</a></li>
+                                    {{/if}}
+                                    
                                 {{/if}}
                                
                             </ul>

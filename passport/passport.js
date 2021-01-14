@@ -9,11 +9,19 @@ const accountModel = require('../models/mongoose/accountModel');
 passport.use(new LocalStrategy(
     async function (username, password, done) {
         const user = await adminAccountService.checkUser(username, password);
+        
         if (!user) {
             return done(null, false, { message: 'Tên đăng nhập hoặc mật khẩu nhập sai!' });
+        } else if (user.accountState === 1) {
+            return done(null, false, { message: 'Tài khoản bạn đã bị khóa!' });
+        } else {
+            if (user.roleName === "User") {
+                return done(null, false, { message: 'Bạn không được phép truy cập trang web này!' });
+            } else {
+                console.log("\npassport user: " + user.roleName + "\n");
+                return done(null, user);
+            }
         }
-
-        return done(null, user);
     }
 ));
 
@@ -35,24 +43,18 @@ passport.use(new GoogleStrategy({
 },
     function (token, refreshToken, profile, done) {
         process.nextTick(async function () {
-            // // tìm trong db xem có user nào đã sử dụng google id này chưa
-            //User.findOne({ 'google.id': profile.id }, function (err, user) {
-            // if (err)
-            //     return done(err);
-            // if (user) {
-            //     // if a user is found, log them in
-            //     return done(null, user);
-            // } else {
-            // if the user isnt in our database, create a new user
-            const user = await accountModel.findOne({ id: profile.id });
-
+            const user = await accountModel.findOne({ email: profile.emails[0].value });
+            //console.log(user);
             if (user) {
-                if(user.id)
-                {
-                    return done(null, user);
+               
+                if (user.id) {
+                    if (user.accountState === 1) {
+                        return done(null, false, { message: 'Tài khoản bạn đã bị khóa!' });
+                    } else if (user.role == "5fe9b7b8ea0d1f18102eed2f") {
+                        return done(null, false, { message: 'Bạn không được phép truy cập trang web này!' });
+                    } else return done(null, user);
                 }
-                else
-                {
+                else {
                     return done(null, false, { message: 'Email đã được sử dụng!!!' });
                 }
             }

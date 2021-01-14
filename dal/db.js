@@ -1,6 +1,7 @@
 // const { config } = require("dotenv/types");
 const mongoose=require("mongoose");
 require('dotenv').config()
+require('../models/mongoose/roleModel');
 
 const uri = process.env.PRODUCTS_MONGODB_URL;
 

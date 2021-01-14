@@ -155,19 +155,25 @@ const changeAccountState = (id, accountState) => {
     xhttp.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
             const data = JSON.parse(this.responseText);
-
             const script = document.getElementById('templateAccount').innerHTML;
-        
             const template = Handlebars.compile(script);
+
+            console.log(data.account.accountState)
             const render = template({
-                accountState: data.accountState,
-                _id: data._id,
-                email: data.email,
-                phoneNumber: data.phoneNumber,
-                name: data.name,
+                accountState: data.account.accountState,
+                _id: data.account._id,
+                email: data.account.email,
+                phoneNumber: data.account.phoneNumber,
+                name: data.account.name,
+                userName: data.account.userName,
+                accRole_user: data.accRole.user,
+                accRole_admin: data.accRole.admin,
+                accRole_superAdmin: data.accRole.superAdmin,
+                role: data.account.role.roleName
             });
           
             document.getElementById(id).innerHTML = render;
+            setTitleYourAccount();
         }
     }
 
@@ -175,62 +181,77 @@ const changeAccountState = (id, accountState) => {
     xhttp.send();
 }
 
-// const changeAccountState = () => {
-//     const myAccountID = document.getElementById("myAccountID").value;
-//     const id = document.getElementById("valueOfAccountID").value;
-//     const accountState = document.getElementById("valueOfAccountState").value;
-//     //alert("myAccountID:\n" + myAccountID);
-//     //alert("id\n" + id);
-//     alert("accountState:\n" + accountState);
-//     $('#changeAccountStateModal').modal('hide');
+const changeAccountRole = (id, accountRole) => {
+    const myAccountID =  document.getElementById("myAccountID").value;
+    //alert(accountRole);
+    const url = window.location.href + "/account-role?id=" + id + "&accountRole=" + accountRole + "&myAccountID=" + myAccountID;
+    //alert(`${id} ${accountState}`);
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status == 200){
+            //alert(this.responseText)
+            const data = JSON.parse(this.responseText);
+            
+            const script = document.getElementById('templateAccount').innerHTML;
+            const template = Handlebars.compile(script);
 
-//     const url = window.location.href + "/accountState?id=" + id + "&accountState=" + accountState + "&myAccountID=" + myAccountID;
-
-//     const xhttp = new XMLHttpRequest();
-//     xhttp.onreadystatechange = function(){
-//         if(this.readyState == 4 && this.status == 200){
-//             const data = JSON.parse(this.responseText);
-
-//             const script = document.getElementById('templateAccount').innerHTML;
-        
-//             const template = Handlebars.compile(script);
-//             const render = template({
-//                 accountState: data.accountState,
-//                 _id: data._id,
-//                 email: data.email,
-//                 phoneNumber: data.phoneNumber,
-//                 name: data.name,
-//             });
+            const render = template({
+                accountState: data.account.accountState,
+                _id: data.account._id,
+                email: data.account.email,
+                phoneNumber: data.account.phoneNumber,
+                name: data.account.name,
+                userName: data.account.userName,
+                accRole_user: data.accRole.user,
+                accRole_admin: data.accRole.admin,
+                accRole_superAdmin: data.accRole.superAdmin,
+                role: data.account.role.roleName
+            });
           
-//             document.getElementById(id).innerHTML = render;
-//         }
-//     }
+            document.getElementById(id).innerHTML = render;
+            setTitleYourAccount();
+        }
+    }
 
-//     xhttp.open("GET", url, true);
-//     xhttp.send();
-// }
-
-// $( "tr.row-account-info" ).click(function (){
-//     const index = $(this).index();
-//     //alert("index: " + index);
-//     //console.log("clicked " + $('tr.accountID')[index].innerHTML);
-//     const id = $('input.accountID')[index].value;
-//     console.log(id);
-//     const accountState = $('input.accountState')[index].value;
-//     $('#valueOfAccountID').val(id);
-//     $('#valueOfAccountState').val(accountState);
-// });
+    xhttp.open("GET", url, true);
+    xhttp.send();
+}
 
 
 function setTitleYourAccount(){
     const myAccountID = document.getElementById('myAccountID').value;
+    const myAccountRole = document.getElementById('myAccountRole').value;
     const accountID = document.getElementsByClassName("row-account-user");
+    const accountRole = document.getElementsByClassName("accountRole");
+    const hideItem = document.getElementsByClassName("hide-item");
+
+    if(myAccountRole === "admin"){
+        $(".superAdminMenu").hide();
+    } else {
+        $(".adminMenu").hide();
+    }
 
     for (let i = 0; i < accountID.length; i++){
 
+        // if (accountRole[i].value === "Customer"){
+        //     document.getElementsByClassName("cap-quyen")[i].style.display = "block";
+        // } else if (accountRole[i].value === "Admin") {
+        //     document.getElementsByClassName("xoa-quyen")[i].style.display = "none"
+        // } else {
+
+        // }
+
         if (myAccountID === accountID[i].value){
             document.getElementsByClassName('notify')[i].innerHTML="(Tài khoản của bạn)";
-            //document.getElementsByClassName("aaa")[i].style.display = "none";
+            //alert("i = " + i);
+            //$("div.aaa:nth-child(i) > li.hide-item").hide();
+
+            // for (let j = i; j < i + 10; j++){
+            //     hideItem[j].style.display = "none";
+            //     //alert(j);
+            // }
+            //document.getElementsByClassName("hide-item")[i].style.display = "none";
+            //document.getElementsByClassName("hide-item-1")[i].style.display = "none";
             break;
         }
 

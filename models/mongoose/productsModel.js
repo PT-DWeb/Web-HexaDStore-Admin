@@ -19,9 +19,9 @@ const productSchema = mongoose.Schema({
     releaseDay: {type: Date, default: Date.now()},
     DeletedState: {type: Number, default: 0, enum: [0,1]},
     detailImgs: {type: [String], require: true},
-    reviewNum: {type: Number, default: 0},
-    trackNum: {type: Number, default: 0},
-    quantitySold: {type: Number, default: 0}
+    reviewNum: {type: Number, default: 0, require: true},
+    trackNum: {type: Number, default: 0, require: true},
+    quantitySold: {type: Number, default: 0, require: true}
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }

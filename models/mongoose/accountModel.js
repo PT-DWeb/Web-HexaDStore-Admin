@@ -14,7 +14,7 @@ const accountSchema = mongoose.Schema({
     accountState:{type: Number,  enum: [0,1], default: 0},
     id : {type: String, require: true},
     token : {type: String, require: true},
-    role: {type: mongoose.Schema.Types.ObjectId , require: true},
+    role: {type: mongoose.Schema.Types.ObjectId , require: true, ref: "Role"},
     DoB: {type: String},
     gender: {type: String, enum: ['Nam', 'Nữ', 'Khác'], require: true}
 })

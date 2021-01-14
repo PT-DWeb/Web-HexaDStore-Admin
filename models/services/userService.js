@@ -1,21 +1,92 @@
 const accountModel = require('../mongoose/accountModel');
+const roleModel = require('../mongoose/roleModel');
 
 exports.getListAccounts = async (req, res, next) => {
-    const listAccs = await accountModel.find({});
-    return listAccs;
+    //const listAccs = await accountModel.find({});
+
+    const listAccs = await accountModel.find({}, null, { lean: true })
+        .populate({ path: "role", model: "Role" })
+        .exec().then((docs) => {
+            return docs;
+        });
+
+    const newListAccs = [];
+    listAccs.forEach((account) => {
+        const accRole = {
+            user: account.role.roleName === "User",
+            admin: account.role.roleName === "Admin",
+            superAdmin: account.role.roleName === "superAdmin"
+        }
+
+        newListAccs.push({ account, accRole });
+    })
+
+    //const data = listAccs.push(accRole);
+
+    //console.log(newListAccs);
+    return newListAccs;
 }
 
-exports.changeAccountState = async(req, res, next) => {
-    if (req.query.id != req.query.myAccountID){
-        await accountModel.findOneAndUpdate({_id:req.query.id},{
-            accountState: +req.query.accountState ? 0:1
+exports.changeAccountState = async (req, res, next) => {
+    if (req.query.id != req.query.myAccountID) {
+        await accountModel.findOneAndUpdate({ _id: req.query.id }, {
+            accountState: +req.query.accountState ? 0 : 1
         });
     }
-    const account = await accountModel.findOne({_id: req.query.id});
-    return account;
+
+    const account = await accountModel.findOne({ _id: req.query.id })
+        .populate({ path: "role", model: "Role" })
+        .exec().then((docs) => {
+            return docs;
+        });
+
+    const accRole = {
+        user: account.role.roleName === "User",
+        admin: account.role.roleName === "Admin",
+        superAdmin: account.role.roleName === "superAdmin"
+    }
+
+    const acc = { account, accRole };
+    return acc;
 }
 
-exports.display = async(req, res, next) => {
-    const info = await accountModel.findOne({_id: req.params.id});
+exports.display = async (req, res, next) => {
+    const info = await accountModel.findOne({ _id: req.params.id });
     return info;
+}
+
+exports.changeAccountRole = async (req, res, next) => {
+    if (req.query.id != req.query.myAccountID) {
+        let newRole;
+        if (req.query.accountRole === "Admin"){
+            newRole = "User";
+        } else {
+            newRole = "Admin"
+        }
+
+        const roleID = await roleModel.findOne({ roleName: newRole });
+        console.log("roleID: " + roleID);
+
+        await accountModel.findOneAndUpdate({ _id: req.query.id }, {
+            role: roleID._id
+        });
+    }
+
+    const account = await accountModel.findOne({ _id: req.query.id })
+        .populate({ path: "role", model: "Role" })
+        .exec().then((docs) => {
+            return docs;
+        });
+    
+    const roleName = account.role.roleName ;
+
+    const accRole = {
+        user: roleName === "User",
+        admin: roleName === "Admin",
+        superAdmin: roleName === "superAdmin"
+    }
+
+    const acc = { account, accRole };
+    console.log("acc: " + acc);
+    return acc;
 }

@@ -7,7 +7,8 @@ router.get('/google', passport.authenticate('google', {scope: ['profile', 'email
 router.get('/google/callback',
 passport.authenticate('google', {
     successRedirect: '/',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    failureFlash: true
 }))
 
 module.exports = router;

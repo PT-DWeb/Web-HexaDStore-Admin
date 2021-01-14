@@ -8,13 +8,13 @@ exports.findOne = async(filter) =>{
 
 exports.add = async(req, res, next)=>{
     const newManufacturer = new manufacturerModel({manufacturer: req.body.newManufacturer});
-    console.log(newManufacturer);
+    //console.log(newManufacturer);
     await newManufacturer.save();
 }
 
 exports.rename = async(req, res, next)=>{
-    console.log(req.body.manufacturerId);
-    console.log(req.body.newManufacturerName)
+    //console.log(req.body.manufacturerId);
+    //console.log(req.body.newManufacturerName)
     await manufacturerModel.findOneAndUpdate({_id: req.body.manufacturerId}, {manufacturer: req.body.newManufacturerName}, {new: true}, (err, doc) => {
         if (err) {
             console.log("Err Rename: " + err);

@@ -4,16 +4,17 @@ const emailValidator = require('email-deep-validator');
 
 const accountModel = require('../mongoose/accountModel');
 const productsService = require('../services/productsService');
+const { use } = require('passport');
 
 const saltRounds = 10;
 let accountdata = "abc";
 
-exports.getAccInfo = async(req, res, next) =>{
-    const accountInfo = await accountModel.findOne({_id: req.params.id}).lean();
+exports.getAccInfo = async (req, res, next) => {
+    const accountInfo = await accountModel.findOne({ _id: req.params.id });
     return accountInfo;
 }
 
-exports.editInfo = async(req, res, next)=>{
+exports.editInfo = async (req, res, next) => {
     const info = req.body;
 
     const docs = {
@@ -25,49 +26,49 @@ exports.editInfo = async(req, res, next)=>{
         //email: info.email,
     };
 
-    await accountModel.findOneAndUpdate({_id: req.params.id}, docs, {new: true}, (err, doc) => {
+    await accountModel.findOneAndUpdate({ _id: req.params.id }, docs, { new: true }, (err, doc) => {
         if (err) {
             console.log("Err Edit info: " + err);
         };
     });
 }
 
-exports.changeAvt = async(req, res, next) =>{
+exports.changeAvt = async (req, res, next) => {
     const form = formidable({ multiples: true });
-    
+
     await new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
             if (err) {
                 reject(err);
             }
-   
+
             const avatar = files.adminAvt;
 
-            if (avatar && avatar.size > 0){
+            if (avatar && avatar.size > 0) {
                 await productsService.uploadImg(avatar, 'adminAvts')
-                    .then((avatarLink)=>{
+                    .then((avatarLink) => {
                         console.log("Link avt: " + avatarLink);
                         const IDQuery = fields._id;
-                        const newAvatar = {avatar: avatarLink};
-                        accountModel.findOneAndUpdate({_id: IDQuery}, newAvatar, {new: true}, (err, doc) => {
+                        const newAvatar = { avatar: avatarLink };
+                        accountModel.findOneAndUpdate({ _id: IDQuery }, newAvatar, { new: true }, (err, doc) => {
                             if (err) reject(err);
                         });
                         console.log("Đổi avatar thành công");
                     });
             }
-          
+
             resolve();
             return fields._id;
         });
     });
 }
 
-exports.changePass = async (req, res, next)=>{
-    const account = await accountModel.findOne({_id: req.params.id});
+exports.changePass = async (req, res, next) => {
+    const account = await accountModel.findOne({ _id: req.params.id });
     const data = req.body;
     let checkPassword = await bcrypt.compare(data.oldPassword, account.password);
 
-    if(checkPassword){
+    if (checkPassword) {
         const hashedPassword = await new Promise((resolve, reject) => {
             bcrypt.hash(data.newPassword, saltRounds, function (err, hash) {
                 if (err) reject(err)
@@ -75,9 +76,9 @@ exports.changePass = async (req, res, next)=>{
             });
         })
 
-        await accountModel.findOneAndUpdate({_id: req.params.id}, {password: hashedPassword});
+        await accountModel.findOneAndUpdate({ _id: req.params.id }, { password: hashedPassword });
         return true;
-        
+
     } else {
         return false;
     }
@@ -92,7 +93,7 @@ exports.findOne = async (key, value) => {
     query[name] = value1;
     const user = await accountModel.findOne(query);
 
-    console.log(user);
+    //console.log(user);
     return user
 }
 
@@ -101,7 +102,7 @@ exports.UpdatePassword = async (key, value, update) => {
     var value1 = value;
     var query = {};
     query[name] = value1;
-    const user = await accountModel.findOneAndUpdate(query,update);
+    const user = await accountModel.findOneAndUpdate(query, update);
     console.log("UPDATE PASSWORD")
     console.log(user);
     return user
@@ -125,7 +126,13 @@ exports.checkUser = async (username, password) => {
 }
 
 exports.getUser = async (id) => {
-    return await accountModel.findOne({ _id: id });
+    return await accountModel.findOne({ _id: id })
+        .populate({ path: "role", model: "Role" })
+        .exec().then((docs) => {
+            return docs;
+        });
+    
+    
 }
 
 exports.saveTemporaryAccount = async (req, res, next) => {
@@ -157,9 +164,9 @@ exports.setTemporaryAccount = (req, res, next) => {
 exports.getSelectedGender = async (req, res, next) => {
     const genderEnum = ['Nam', 'Nữ', 'Khác'];
     const listGender = [];
-    const account = await accountModel.findOne({_id: req.params.id});
+    const account = await accountModel.findOne({ _id: req.params.id });
 
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i < 3; i++) {
         listGender.push({
             name: genderEnum[i],
             isSelected: genderEnum[i] === account.gender

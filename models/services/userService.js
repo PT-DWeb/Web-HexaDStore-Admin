@@ -3,9 +3,12 @@ const roleModel = require('../mongoose/roleModel');
 
 exports.getListAccounts = async (req, res, next) => {
     //const listAccs = await accountModel.find({});
+    const page=+req.query.page || 1;
+    const limit =10;
+    const offset =(page -1)*10;
 
     const listAccs = await accountModel.find({}, null, { lean: true })
-        .populate({ path: "role", model: "Role" })
+        .populate({ path: "role", model: "Role" }).skip(offset).limit(limit)
         .exec().then((docs) => {
             return docs;
         });
@@ -23,7 +26,6 @@ exports.getListAccounts = async (req, res, next) => {
 
     //const data = listAccs.push(accRole);
 
-    //console.log(newListAccs);
     return newListAccs;
 }
 
@@ -89,4 +91,8 @@ exports.changeAccountRole = async (req, res, next) => {
     const acc = { account, accRole };
     console.log("acc: " + acc);
     return acc;
+}
+
+exports.count =async ()=>{
+    return await accountModel.countDocuments();
 }

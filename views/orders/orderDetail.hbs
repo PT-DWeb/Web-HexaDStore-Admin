@@ -4,8 +4,8 @@
         <br>
         <h6>Họ tên khách hàng: {{order.idCustomer.userName}}</h6>
         <h6>Số điện thoại: {{order.phone}}</h6>
-        <h6>Ngày đặt hàng: {{order.orderDate}}</h6>
-        <h6>Ngày giao hàng dự kiến: {{order.deliveryDate}}</h6>
+        <h6>Ngày đặt hàng: {{order.orderTime}}</h6>
+        <h6>Ngày giao hàng dự kiến: {{order.deliveryTime}}</h6>
         <h6>Địa chỉ: {{order.address}}</h6>
         <h6>Trạng thái đơn hàng: {{order.orderStatus.statusName}}</h6>
     </div>
@@ -29,8 +29,8 @@
                             {{!-- <td class="align-middle text-left"><a href="/list-products/view/{{idProduct._id}}">{{idProduct.name}}</a></td> --}}
                             <td class="align-middle text-left">{{idProduct.name}}</td>
                             <td class="align-middle">{{quantity}}</td>
-                            <td class="align-middle">{{idProduct.discountprice}}</td>
-                            <td class="align-middle">{{total}}</td>
+                            <td class="align-middle">{{idProduct.discountprice}}₫</td>
+                            <td class="align-middle">{{ftotal}}₫</td>
                         </tr>
                     {{/each}}
 
@@ -39,11 +39,12 @@
             </table>
 
             <div>
-                <h6>Tổng tiền: {{order.total}}</h6>
-                <h6>Phương thức thanh toán: </h6>
+                <h6>Tổng tiền: {{order.ftotal}}₫</h6>
+                <h6>Phương thức thanh toán: {{order.paymentMethod}}</h6>
             </div>
             
-            {{!-- <div>
+            {{#if isPagination}}
+            <div>
                 <nav aria-label="...">
                     <ul class="pagination">
 
@@ -71,7 +72,9 @@
                     </ul>
                 </nav>
 
-            </div> --}}
+            </div>
+            {{/if}}
+           
         </div>
     </div>
     <div class="card-footer text-center">

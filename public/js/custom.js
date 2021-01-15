@@ -225,7 +225,7 @@ function setTitleYourAccount(){
     const accountRole = document.getElementsByClassName("accountRole");
     const hideItem = document.getElementsByClassName("hide-item");
 
-    if(myAccountRole === "admin"){
+    if(myAccountRole === "Admin"){
         $(".superAdminMenu").hide();
     } else {
         $(".adminMenu").hide();

@@ -26,7 +26,7 @@ exports.product = async(req, res, next) => {
 
     const filter={};
     if( nameProduct != undefined){
-        filter.name = nameProduct;
+        filter.name = new RegExp(nameProduct,"i");;
     }
     
     if(nameManufacturer !=undefined){
